@@ -80,6 +80,7 @@ const projects = computed(() => [
       { label: t('ecosystem.fastchange.link1'), href: 'https://fastchange.exchange', target: true }
     ]
   },
+  /*
   {
     id: 'quickybet',
     category: t('ecosystem.quickybet.category'),
@@ -94,6 +95,7 @@ const projects = computed(() => [
       { label: t('ecosystem.quickybet.link1'), href: 'https://quickybet.net', target: true }
     ]
   },
+  */
   {
     id: 'alicante',
     category: t('ecosystem.alicante.category'),
