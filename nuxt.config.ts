@@ -1,6 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2026-06-12',
+  devServer: {
+    port: 27900
+  },
   future: {
     compatibilityVersion: 4,
   },
