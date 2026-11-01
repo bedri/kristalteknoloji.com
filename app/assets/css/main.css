@@ -1,2 +1,334 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+/* ==========================================================================
+   KRISTAL TEKNOLOJI — CORPORATE DESIGN SYSTEM
+   Palette strictly derived from Logo (A28):
+   - Primary Brand Cyan:   #00bed6 (rgb(0, 190, 214))
+   - Secondary Ice Cyan:   #97d1dc (rgb(151, 209, 220))
+   - Brand Titanium Gray:  #808284 (rgb(128, 130, 132))
+   ========================================================================== */
+
+:root {
+  /* Tier 1: Literal Brand Tokens */
+  --brand-cyan: #00bed6;
+  --brand-cyan-bright: #1ad1e8;
+  --brand-cyan-deep: #008fa3;
+  --brand-cyan-ice: #97d1dc;
+  --brand-gray: #808284;
+  --brand-gray-light: #b4b6b8;
+  --brand-gray-dark: #4a4c4e;
+
+  --surface-light: #f7f9fb;
+  --surface-card-light: rgba(255, 255, 255, 0.88);
+  --surface-elevated-light: #ffffff;
+  --text-primary-light: #0f141a;
+  --text-secondary-light: #52565b;
+  --border-subtle-light: rgba(128, 130, 132, 0.22);
+
+  --surface-dark: #070b10;
+  --surface-card-dark: rgba(13, 19, 28, 0.82);
+  --surface-elevated-dark: #0e1520;
+  --text-primary-dark: #f2f5f8;
+  --text-secondary-dark: #9ea2a8;
+  --border-subtle-dark: rgba(128, 130, 132, 0.2);
+
+  /* Tier 2: Semantic Adaptive Tokens (Default + Media Query Fallback) */
+  --bg-page: var(--surface-light);
+  --bg-card: var(--surface-card-light);
+  --bg-elevated: var(--surface-elevated-light);
+  --text-main: var(--text-primary-light);
+  --text-muted: var(--text-secondary-light);
+  --border-hairline: var(--border-subtle-light);
+  --scrollbar-thumb: #808284;
+  --scrollbar-track: #eef2f6;
+
+  --in-oklab: ;
+  --in-oklch: ;
+
+  /* Viewport-wide native UI theming */
+  color-scheme: light dark;
+  accent-color: var(--brand-cyan);
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: var(--surface-dark);
+    --bg-card: var(--surface-card-dark);
+    --bg-elevated: var(--surface-elevated-dark);
+    --text-main: var(--text-primary-dark);
+    --text-muted: var(--text-secondary-dark);
+    --border-hairline: var(--border-subtle-dark);
+    --scrollbar-thumb: #52565b;
+    --scrollbar-track: #0b1017;
+  }
+}
+
+html.light {
+  color-scheme: light;
+  --bg-page: var(--surface-light);
+  --bg-card: var(--surface-card-light);
+  --bg-elevated: var(--surface-elevated-light);
+  --text-main: var(--text-primary-light);
+  --text-muted: var(--text-secondary-light);
+  --border-hairline: var(--border-subtle-light);
+  --scrollbar-thumb: #808284;
+  --scrollbar-track: #eef2f6;
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg-page: var(--surface-dark);
+  --bg-card: var(--surface-card-dark);
+  --bg-elevated: var(--surface-elevated-dark);
+  --text-main: var(--text-primary-dark);
+  --text-muted: var(--text-secondary-dark);
+  --border-hairline: var(--border-subtle-dark);
+  --scrollbar-thumb: #52565b;
+  --scrollbar-track: #0b1017;
+}
+
+@supports (color: light-dark(white, black)) {
+  :root {
+    --bg-page: light-dark(var(--surface-light), var(--surface-dark));
+    --bg-card: light-dark(var(--surface-card-light), var(--surface-card-dark));
+    --bg-elevated: light-dark(var(--surface-elevated-light), var(--surface-elevated-dark));
+    --text-main: light-dark(var(--text-primary-light), var(--text-primary-dark));
+    --text-muted: light-dark(var(--text-secondary-light), var(--text-secondary-dark));
+    --border-hairline: light-dark(var(--border-subtle-light), var(--border-subtle-dark));
+    --scrollbar-thumb: light-dark(#808284, #52565b);
+    --scrollbar-track: light-dark(#eef2f6, #0b1017);
+  }
+}
+
+@supports (background: linear-gradient(in oklab, white, black)) {
+  :root {
+    --in-oklab: in oklab;
+    --in-oklch: in oklch;
+  }
+}
+
+/* Legacy fallback for WebKit/Blink browsers without scrollbar-color */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+}
+
+/* ==========================================================================
+   TYPOGRAPHY & LEGIBILITY
+   ========================================================================== */
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: rgba(0, 190, 214, 0.22);
+  color: inherit;
+}
+
+h1, h2, h3, h4, .heading-balance {
+  text-wrap: balance;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+}
+
+p, li, blockquote, .body-pretty {
+  text-wrap: pretty;
+}
+
+/* ==========================================================================
+   INTERACTIVITY, FOCUS & ACCESSIBILITY
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--brand-cyan);
+  outline-offset: 3px;
+}
+
+/* Form Inputs & Validation (:user-invalid / :user-valid after interaction) */
+.kt-input {
+  width: 100%;
+  min-block-size: 2.75rem;
+  padding-block: 0.65rem;
+  padding-inline: 0.95rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+  border: 1px solid var(--border-hairline);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.kt-input::placeholder {
+  color: #808284;
+  opacity: 0.75;
+}
+
+.kt-input:focus {
+  outline: none;
+  border-color: var(--brand-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 190, 214, 0.16);
+}
+
+.kt-input:where(:user-invalid, .user-invalid-fallback) {
+  border-color: #dc2626 !important;
+  background-color: rgba(220, 38, 38, 0.04);
+}
+
+.kt-input:where(:user-valid, .user-valid-fallback) {
+  border-color: var(--brand-cyan) !important;
+}
+
+.kt-field-error {
+  display: none;
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-block-start: 0.35rem;
+}
+
+:where(.kt-field, .form-group):has(.kt-input:where(:user-invalid, .user-invalid-fallback)) .kt-field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ==========================================================================
+   CORPORATE ARCHITECTURAL SURFACES & UTILITIES
+   ========================================================================== */
+
+.kt-panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  backdrop-filter: blur(16px);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, translate 0.25s ease;
+}
+
+.kt-panel-interactive:hover {
+  border-color: rgba(0, 190, 214, 0.55);
+  box-shadow: 0 20px 45px -15px rgba(0, 190, 214, 0.12),
+              0 0 0 1px rgba(0, 190, 214, 0.15);
+}
+
+.kt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.35rem;
+  padding-inline: 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-cyan);
+  background-color: rgba(0, 190, 214, 0.08);
+  border: 1px solid rgba(0, 190, 214, 0.28);
+}
+
+.kt-badge-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 9999px;
+  background-color: var(--brand-cyan);
+  box-shadow: 0 0 8px var(--brand-cyan);
+}
+
+.kt-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding-block: 0.65rem;
+  padding-inline: 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background-color: var(--brand-cyan);
+  color: #061014;
+  border: 1px solid transparent;
+  box-shadow: 0 8px 24px -6px rgba(0, 190, 214, 0.45);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, translate 0.2s ease;
+  cursor: pointer;
+}
+
+.kt-btn-primary:hover:not(:disabled) {
+  background-color: var(--brand-cyan-bright);
+  box-shadow: 0 12px 28px -6px rgba(0, 190, 214, 0.6);
+  translate: 0 -1px;
+}
+
+.kt-btn-Primary:disabled,
+.kt-btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.kt-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding-block: 0.65rem;
+  padding-inline: 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background-color: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-hairline);
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease, translate 0.2s ease;
+  cursor: pointer;
+}
+
+.kt-btn-secondary:hover:not(:disabled) {
+  border-color: var(--brand-cyan);
+  color: var(--brand-cyan);
+  background-color: rgba(0, 190, 214, 0.06);
+  translate: 0 -1px;
+}
+
+/* Off-screen rendering optimization */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 520px;
+}
+
+/* Scroll-driven entry reveal for architectural panels */
+@keyframes kt-panel-entry {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    .cv-auto .kt-panel {
+      animation: kt-panel-entry linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 28%;
+    }
+  }
+}

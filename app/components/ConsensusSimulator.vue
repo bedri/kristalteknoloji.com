@@ -6,6 +6,7 @@ const currentTargetSeed = ref('0x762ee7ab...')
 const simStep = ref(0)
 const logs = ref([])
 const logContainer = ref(null)
+const wrapperEl = ref(null)
 
 const nodeNames = [
   'KristalNode-Alpha', 'Nebula-Base', 'Velvet-Gate-03',
@@ -27,13 +28,14 @@ const validators = ref(
 )
 
 const steps = [
-  { id: 0, label: '1. ADAM Seçim Katmanı' },
-  { id: 1, label: '2. PoBLS Biletleri Dağıtımı' },
-  { id: 2, label: '3. XOR Mesafeleri Ölçümü' },
-  { id: 3, label: '4. Blok Proposer Belirlenmesi' }
+  { id: 0, code: '01', label: 'ADAM Seçim Katmanı' },
+  { id: 1, code: '02', label: 'PoBLS Bilet Dağıtımı' },
+  { id: 2, code: '03', label: 'XOR Mesafe Ölçümü' },
+  { id: 3, code: '04', label: 'Blok Proposer Seçimi' }
 ]
 
 let simInterval = null
+let intersectionObserver = null
 
 const generateRandomSeed = () => {
   const chars = '0123456789abcdef'
@@ -52,9 +54,11 @@ const addLog = (message, type = 'system') => {
     message,
     type
   })
+  if (logs.value.length > 40) {
+    logs.value.shift()
+  }
 }
 
-// Watch logs to auto-scroll console
 watch(() => logs.value.length, async () => {
   await nextTick()
   if (logContainer.value) {
@@ -64,8 +68,7 @@ watch(() => logs.value.length, async () => {
 
 const runSimulationStep = () => {
   switch (simStep.value) {
-    case 0:
-      // Reset winner state and generate new active validators
+    case 0: {
       validators.value.forEach(v => {
         v.isActive = false
         v.isWinner = false
@@ -73,8 +76,7 @@ const runSimulationStep = () => {
         v.ticket = 'Uptime: OK'
         v.distance = null
       })
-      
-      // Select 5 random nodes
+
       const selectedIndices = []
       while (selectedIndices.length < 5) {
         const idx = Math.floor(Math.random() * validators.value.length)
@@ -82,20 +84,20 @@ const runSimulationStep = () => {
           selectedIndices.push(idx)
         }
       }
-      
+
       selectedIndices.forEach(idx => {
         const v = validators.value[idx]
         v.isActive = true
         v.role = 'ADAM Doğrulayıcı'
         v.ticket = 'Bilet bekliyor...'
       })
-      
+
       addLog('Mutabakat Çerçevesi: Uygun masternode havuzundan 5 aktif doğrulayıcı seçildi (ADAM Protokolü).', 'alert')
       simStep.value = 1
       break
-      
-    case 1:
-      // Ephemeral ticket generation
+    }
+
+    case 1: {
       validators.value.forEach(v => {
         if (v.isActive) {
           const ticketVal = '0x' + Math.floor(Math.random() * 16777215).toString(16).padEnd(6, '0') + '...'
@@ -105,16 +107,15 @@ const runSimulationStep = () => {
       addLog('PoBLS Loterisi: Aktif doğrulayıcılar için ephemeral BLS loteri biletleri dağıtıldı.', 'system')
       simStep.value = 2
       break
-      
-    case 2:
-      // Target hash and distance calculation
+    }
+
+    case 2: {
       currentTargetSeed.value = generateRandomSeed()
       const targetVal = parseInt(currentTargetSeed.value.replace('0x', '').replace('...', ''), 16) || 12345
-      
+
       validators.value.forEach(v => {
         if (v.isActive) {
           const ticketNum = parseInt(v.ticket.replace('0x', '').replace('...', ''), 16) || 54321
-          // Compute XOR distance
           const xorVal = ticketNum ^ targetVal
           v.distance = xorVal
         }
@@ -122,12 +123,12 @@ const runSimulationStep = () => {
       addLog(`Hedef Tohum T_target = ${currentTargetSeed.value} oluşturuldu. XOR mesafeleri hesaplanıyor...`, 'system')
       simStep.value = 3
       break
-      
-    case 3:
-      // Proposer winner selection
+    }
+
+    case 3: {
       let winnerNode = null
       let minDistance = Infinity
-      
+
       validators.value.forEach(v => {
         if (v.isActive && v.distance !== null) {
           if (v.distance < minDistance) {
@@ -136,113 +137,185 @@ const runSimulationStep = () => {
           }
         }
       })
-      
+
       if (winnerNode) {
         winnerNode.isWinner = true
         winnerNode.role = 'BLOK PROPOSER (KAZANAN)'
         currentBlockHeight.value++
-        
+
         addLog(`Kazanan doğrulayıcı: <strong>${winnerNode.name}</strong> (Mesafe: 0x${minDistance.toString(16).toUpperCase()})`, 'winner')
         addLog(`Blok #${currentBlockHeight.value} başarıyla zincire eklendi. Ödüller dağıtıldı (Model D).`, 'system')
       }
-      
+
       simStep.value = 0
       break
+    }
   }
+}
+
+const startTimer = () => {
+  if (simInterval) return
+  simInterval = setInterval(runSimulationStep, 4000)
+}
+
+const stopTimer = () => {
+  if (simInterval) {
+    clearInterval(simInterval)
+    simInterval = null
+  }
+}
+
+const handleVisibilityAutoState = (e) => {
+  if (e.skipped) stopTimer()
+  else startTimer()
 }
 
 onMounted(() => {
   addLog('Simülatör başlatılıyor...', 'system')
   addLog('PoBLS Kripto Loterisi simülasyonu çalışıyor.', 'system')
-  runSimulationStep() // initial run
-  simInterval = setInterval(runSimulationStep, 4000)
+  runSimulationStep()
+  startTimer()
+
+  if (wrapperEl.value) {
+    wrapperEl.value.addEventListener('contentvisibilityautostatechange', handleVisibilityAutoState)
+    if ('IntersectionObserver' in window) {
+      intersectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) startTimer()
+          else stopTimer()
+        })
+      })
+      intersectionObserver.observe(wrapperEl.value)
+    }
+  }
 })
 
 onUnmounted(() => {
-  if (simInterval) clearInterval(simInterval)
+  stopTimer()
+  if (wrapperEl.value) {
+    wrapperEl.value.removeEventListener('contentvisibilityautostatechange', handleVisibilityAutoState)
+  }
+  if (intersectionObserver) {
+    intersectionObserver.disconnect()
+  }
 })
 </script>
 
 <template>
-  <div class="simulator-wrapper flex flex-col gap-8">
-    <div class="sim-header flex justify-between items-center bg-slate-800/5 dark:bg-black/20 border border-slate-800/10 dark:border-slate-200/10 p-5 rounded-2xl font-mono text-sm flex-wrap gap-4">
-      <div class="sim-block-height">
-        Blok Yüksekliği: <span class="text-[#00bed6] font-bold">{{ currentBlockHeight }}</span>
+  <div ref="wrapperEl" class="simulator-wrapper flex flex-col gap-7">
+    <!-- Top Telemetry Bar -->
+    <div class="sim-header flex justify-between items-center bg-slate-900/[0.03] dark:bg-[#050911] border border-slate-300/70 dark:border-slate-800/80 p-4 sm:p-5 rounded-2xl font-mono text-xs sm:text-sm flex-wrap gap-4">
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#00bed6] animate-pulse"></span>
+        <div>
+          <span class="text-[#808284] mr-2">BLOK YÜKSEKLİĞİ:</span>
+          <span class="text-[#00bed6] font-bold">#{{ currentBlockHeight }}</span>
+        </div>
       </div>
-      <div class="sim-target-hash">
-        Hedef Tohum (T_target): <span class="text-violet-400 font-semibold">{{ currentTargetSeed }}</span>
+      <div class="flex items-center gap-4">
+        <div>
+          <span class="text-[#808284] mr-2">HEDEF TOHUM (T_target):</span>
+          <span class="text-slate-800 dark:text-[#97d1dc] font-bold">{{ currentTargetSeed }}</span>
+        </div>
+        <button
+          type="button"
+          class="px-3 py-1 rounded-lg bg-[#00bed6]/10 border border-[#00bed6]/30 text-[#00bed6] hover:bg-[#00bed6]/20 text-xs font-bold transition-colors cursor-pointer"
+          @click="runSimulationStep"
+        >
+          Sonraki Adım →
+        </button>
       </div>
     </div>
-    
-    <!-- Validators grid -->
-    <div class="sim-nodes-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <div 
-        v-for="node in validators" 
-        :key="node.id"
-        class="sim-node-card bg-slate-800/5 dark:bg-slate-900/20 border border-slate-800/10 dark:border-slate-200/10 rounded-2xl p-5 font-mono flex flex-col gap-2 transition-all duration-300"
-        :class="{ 
-          'border-amber-500/40 bg-amber-500/5': node.isActive && !node.isWinner,
-          'border-[#00bed6] bg-[#00bed6]/10 shadow-[0_0_15px_rgba(0,190,214,0.2)] scale-[1.02]': node.isWinner 
-        }"
+
+    <!-- Timeline Progress -->
+    <div class="sim-timeline grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div
+        v-for="step in steps"
+        :key="step.id"
+        class="timeline-step flex items-center gap-3 px-4 py-3 rounded-xl border font-mono text-xs transition-all duration-300"
+        :class="simStep === step.id || (simStep === 0 && step.id === 3)
+          ? 'bg-[#00bed6]/12 text-[#00bed6] border-[#00bed6]/40 font-bold shadow-[0_0_20px_rgba(0,190,214,0.1)]'
+          : 'bg-slate-900/[0.02] dark:bg-slate-900/40 text-[#808284] border-slate-200/70 dark:border-slate-800/80'"
       >
-        <div class="node-name font-sans font-bold text-slate-800 dark:text-slate-100">{{ node.name }}</div>
-        
-        <div 
-          class="node-role text-[10px] uppercase tracking-wider"
-          :class="node.isActive ? 'text-amber-500 font-semibold' : 'text-slate-500'"
+        <span class="px-1.5 py-0.5 rounded bg-[#00bed6]/10 text-[#00bed6] text-[10px] font-bold">{{ step.code }}</span>
+        <span class="truncate">{{ step.label }}</span>
+      </div>
+    </div>
+
+    <!-- Validators Grid -->
+    <div class="sim-nodes-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
+      <div
+        v-for="node in validators"
+        :key="node.id"
+        class="sim-node-card rounded-2xl p-4 font-mono flex flex-col gap-2 transition-all duration-300 border"
+        :class="[
+          node.isWinner
+            ? 'border-[#00bed6] bg-[#00bed6]/12 shadow-[0_0_24px_rgba(0,190,214,0.18)] scale-[1.01]'
+            : node.isActive
+              ? 'border-[#97d1dc]/60 dark:border-[#00bed6]/40 bg-[#00bed6]/[0.04] dark:bg-[#00bed6]/[0.06]'
+              : 'border-slate-200/80 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/30 opacity-75'
+        ]"
+      >
+        <div class="flex items-center justify-between gap-2">
+          <div class="node-name font-sans font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
+            {{ node.name }}
+          </div>
+          <span
+            class="w-2 h-2 rounded-full shrink-0"
+            :class="node.isWinner ? 'bg-[#00bed6] animate-ping' : node.isActive ? 'bg-[#00bed6]' : 'bg-[#808284]/40'"
+          ></span>
+        </div>
+
+        <div
+          class="node-role text-[10px] uppercase tracking-wider font-bold"
+          :class="node.isWinner ? 'text-[#00bed6]' : node.isActive ? 'text-slate-700 dark:text-[#97d1dc]' : 'text-[#808284]'"
         >
           {{ node.role }}
         </div>
-        
-        <div class="node-ticket text-xs text-slate-400">
+
+        <div class="node-ticket text-xs text-[#808284]">
           <span v-if="node.isActive">
-            Bilet: <span class="text-[#00bed6]">{{ node.ticket }}</span>
+            Bilet: <span class="text-slate-800 dark:text-slate-200 font-semibold">{{ node.ticket }}</span>
           </span>
-          <span v-else>Uptime: OK</span>
+          <span v-else>Durum: <span class="text-slate-600 dark:text-slate-400">Uptime OK</span></span>
         </div>
-        
-        <div 
-          v-if="node.isActive && node.distance !== null" 
-          class="node-distance text-xs text-slate-400 border-t border-slate-800/10 dark:border-slate-200/10 pt-2 mt-1"
+
+        <div
+          v-if="node.isActive && node.distance !== null"
+          class="node-distance text-xs text-[#808284] border-t border-slate-200/70 dark:border-slate-800/80 pt-2 mt-1 flex justify-between items-center"
         >
-          XOR Mesafe: 
-          <span :class="node.isWinner ? 'text-[#00bed6] font-bold' : 'text-violet-400'">
+          <span>XOR:</span>
+          <span :class="node.isWinner ? 'text-[#00bed6] font-bold' : 'text-slate-700 dark:text-[#97d1dc]'">
             0x{{ node.distance.toString(16).toUpperCase() }}
           </span>
         </div>
       </div>
     </div>
-    
-    <!-- Timeline progress -->
-    <div class="sim-timeline flex justify-between gap-4 border-y border-slate-800/10 dark:border-slate-200/10 py-4 overflow-x-auto">
-      <div 
-        v-for="step in steps" 
-        :key="step.id"
-        class="timeline-step text-xs font-semibold px-4 py-2 rounded-xl border border-transparent whitespace-nowrap transition-all duration-300 text-slate-400"
-        :class="{ 'bg-[#00bed6]/10 text-[#00bed6] border-[#00bed6]/20': simStep === step.id || (simStep === 0 && step.id === 3) }"
-      >
-        {{ step.label }}
+
+    <!-- Telemetry Log Console -->
+    <div class="sim-log-wrapper flex flex-col gap-2.5">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#808284]">
+          TELEMETRY STREAM // POBLS CONSENSUS LOG
+        </span>
+        <span class="text-[11px] font-mono text-[#00bed6]">INTERVAL: 4000ms</span>
       </div>
-    </div>
-    
-    <!-- Log console -->
-    <div class="sim-log-wrapper flex flex-col gap-3">
-      <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 font-heading">Simülasyon Günlüğü</h4>
-      <div 
-        ref="logContainer" 
-        class="sim-log bg-[#05070c] border border-slate-800/10 dark:border-slate-200/10 rounded-2xl p-6 h-[180px] overflow-y-auto font-mono text-xs text-emerald-400 flex flex-col gap-2.5"
+      <div
+        ref="logContainer"
+        class="sim-log bg-[#05080f] border border-slate-800 rounded-2xl p-5 h-[180px] overflow-y-auto font-mono text-xs flex flex-col gap-2"
       >
-        <p 
-          v-for="(log, i) in logs" 
+        <p
+          v-for="(log, i) in logs"
           :key="i"
           class="log-entry leading-relaxed"
-          :class="{ 
-            'text-slate-400': log.type === 'system', 
-            'text-amber-500': log.type === 'alert',
+          :class="{
+            'text-slate-400': log.type === 'system',
+            'text-[#97d1dc]': log.type === 'alert',
             'text-[#00bed6] font-bold': log.type === 'winner'
           }"
         >
-          [{{ log.time }}] <span v-html="log.message"></span>
+          <span class="text-[#808284] mr-1.5">[{{ log.time }}]</span>
+          <span v-html="log.message"></span>
         </p>
       </div>
     </div>

@@ -1,9 +1,9 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 const { t } = useTranslate()
 
 useHead({
-  title: computed(() => `${t('nav.projects')} | Kristal Teknoloji`),
+  title: computed(() => `${t('nav.ecosystem')} | Kristal Teknoloji`),
   meta: [
     { name: 'description', content: computed(() => t('ecosystem.projectsDesc')) }
   ]
@@ -111,38 +111,72 @@ const projects = computed(() => [
     ]
   }
 ])
+
+let revealObserver = null
+onMounted(() => {
+  if (!CSS.supports('(animation-timeline: view()) and (animation-range: entry)')) {
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible')
+        }
+      })
+    }, { threshold: 0.1 })
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el))
+  }
+})
+
+onUnmounted(() => {
+  if (revealObserver) revealObserver.disconnect()
+})
 </script>
 
 <template>
-  <div class="app-layout min-h-screen text-slate-800 dark:text-slate-100 font-sans antialiased bg-slate-50 dark:bg-slate-900/98">
+  <div class="app-layout min-h-dvh text-[#0f141a] dark:text-[#f2f5f8] font-sans antialiased">
     <BgMesh />
     <AppHeader />
-    
+
     <main class="pt-32 pb-24">
       <div class="max-w-7xl mx-auto px-6">
         <!-- Section Header -->
-        <div class="section-header text-center max-w-3xl mx-auto mb-20">
-          <span class="section-tagline text-xs font-bold uppercase tracking-widest text-[#00bed6] mb-3 block">{{ t('ecosystem.activeProjects') }}</span>
-          <h1 class="text-4xl md:text-5xl font-bold font-heading mb-6 text-slate-800 dark:text-slate-50 tracking-tight">
-            {{ t('ecosystem.title') }}
-          </h1>
-          <p class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed">
-            {{ t('ecosystem.projectsDesc') }}
-          </p>
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-10 border-b border-[#808284]/20 gap-8">
+          <div class="max-w-3xl">
+            <div class="kt-badge mb-5">
+              <span class="w-1.5 h-1.5 bg-[#00bed6]" aria-hidden="true"></span>
+              {{ t('ecosystem.activeProjects') }}
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-bold text-[#0f141a] dark:text-white tracking-tight mb-5">
+              {{ t('ecosystem.title') }}
+            </h1>
+            <p class="text-base sm:text-lg text-[#52565b] dark:text-[#9ea2a8] leading-relaxed">
+              {{ t('ecosystem.projectsDesc') }}
+            </p>
+          </div>
+
+          <div class="kt-panel rounded-2xl px-5 py-4 flex items-center gap-4 shrink-0 self-start md:self-auto">
+            <BrandEmblem className="w-8 h-8" />
+            <div class="font-mono text-xs">
+              <div class="text-[#808284]">ACTIVE VENTURES</div>
+              <div class="text-base font-bold text-[#0f141a] dark:text-white tabular-nums">
+                0{{ projects.length }} // LIVE
+              </div>
+            </div>
+          </div>
         </div>
-        
+
         <!-- Projects List -->
-        <div class="projects-list flex flex-col gap-16">
-          <ProjectCard 
-            v-for="(project, index) in projects" 
-            :key="project.id" 
-            :project="project" 
-            :index="index" 
+        <div class="projects-list flex flex-col gap-10">
+          <ProjectCard
+            v-for="(project, index) in projects"
+            :key="project.id"
+            :project="project"
+            :index="index"
           />
         </div>
       </div>
     </main>
-    
+
     <AppFooter />
   </div>
 </template>

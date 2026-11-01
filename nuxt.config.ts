@@ -14,6 +14,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
+      meta: [
+        { name: 'color-scheme', content: 'light dark' },
+        { name: 'theme-color', content: '#00bed6' }
+      ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/svg+xml', href: '/logo_o.svg' }
