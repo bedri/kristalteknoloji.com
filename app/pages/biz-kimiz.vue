@@ -39,7 +39,7 @@ const pillars = computed(() => [
     <BgMesh />
     <AppHeader />
 
-    <main class="pt-32 pb-24">
+    <main id="main-content" tabindex="-1" class="pt-32 pb-24">
       <div class="max-w-7xl mx-auto px-6">
         <!-- ================================================================
              1. CORPORATE PROFILE HEADER

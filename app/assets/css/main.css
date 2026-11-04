@@ -164,15 +164,48 @@ p, li, blockquote, .body-pretty {
 /* Form Inputs & Validation (:user-invalid / :user-valid after interaction) */
 .kt-input {
   width: 100%;
-  min-block-size: 2.75rem;
-  padding-block: 0.65rem;
+  min-block-size: 3rem;
+  padding-block: 0.75rem;
   padding-inline: 0.95rem;
   border-radius: 0.75rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
+  box-sizing: border-box;
   background-color: var(--bg-elevated);
   color: var(--text-main);
   border: 1px solid var(--border-hairline);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+@media (pointer: coarse) {
+  .kt-input {
+    min-block-size: 3.25rem;
+  }
+}
+
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+.skip-link:is(:focus-within, :active) {
+  position: fixed;
+  inset-block-start: 1rem;
+  inset-inline-start: 1rem;
+  z-index: 9999;
+  padding: 0.65rem 1.1rem;
+  border-radius: 0.75rem;
+  background-color: var(--brand-cyan);
+  color: #061014;
+  font-weight: 700;
+  font-size: 0.875rem;
+  box-shadow: 0 10px 25px rgba(0, 190, 214, 0.4);
 }
 
 .kt-input::placeholder {
@@ -330,5 +363,14 @@ p, li, blockquote, .body-pretty {
       animation-timeline: view();
       animation-range: entry 0% entry 28%;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

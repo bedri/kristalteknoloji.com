@@ -1,3 +1,5 @@
+import { SECURITY_HEADERS } from './server/utils/securityHeaders'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2026-06-12',
@@ -12,6 +14,11 @@ export default defineNuxtConfig({
     '@nuxt/ui'
   ],
   devtools: { enabled: true },
+  routeRules: {
+    '/**': {
+      headers: SECURITY_HEADERS
+    }
+  },
   app: {
     head: {
       meta: [

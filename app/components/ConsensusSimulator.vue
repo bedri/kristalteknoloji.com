@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { computeXorDistance, findWinningValidator } from '~/utils/consensusLogic'
 
 const currentBlockHeight = ref(350)
 const currentTargetSeed = ref('0x762ee7ab...')
@@ -46,12 +47,14 @@ const generateRandomSeed = () => {
   return '0x' + result + '...'
 }
 
-const addLog = (message, type = 'system') => {
+const addLog = (message, type = 'system', highlight = '', suffix = '') => {
   const now = new Date()
   const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`
   logs.value.push({
     time: timeStr,
     message,
+    highlight,
+    suffix,
     type
   })
   if (logs.value.length > 40) {
@@ -111,13 +114,10 @@ const runSimulationStep = () => {
 
     case 2: {
       currentTargetSeed.value = generateRandomSeed()
-      const targetVal = parseInt(currentTargetSeed.value.replace('0x', '').replace('...', ''), 16) || 12345
 
       validators.value.forEach(v => {
         if (v.isActive) {
-          const ticketNum = parseInt(v.ticket.replace('0x', '').replace('...', ''), 16) || 54321
-          const xorVal = ticketNum ^ targetVal
-          v.distance = xorVal
+          v.distance = computeXorDistance(v.ticket, currentTargetSeed.value)
         }
       })
       addLog(`Hedef Tohum T_target = ${currentTargetSeed.value} oluşturuldu. XOR mesafeleri hesaplanıyor...`, 'system')
@@ -126,24 +126,19 @@ const runSimulationStep = () => {
     }
 
     case 3: {
-      let winnerNode = null
-      let minDistance = Infinity
+      const winnerNode = findWinningValidator(validators.value)
 
-      validators.value.forEach(v => {
-        if (v.isActive && v.distance !== null) {
-          if (v.distance < minDistance) {
-            minDistance = v.distance
-            winnerNode = v
-          }
-        }
-      })
-
-      if (winnerNode) {
+      if (winnerNode && winnerNode.distance !== null) {
         winnerNode.isWinner = true
         winnerNode.role = 'BLOK PROPOSER (KAZANAN)'
         currentBlockHeight.value++
 
-        addLog(`Kazanan doğrulayıcı: <strong>${winnerNode.name}</strong> (Mesafe: 0x${minDistance.toString(16).toUpperCase()})`, 'winner')
+        addLog(
+          'Kazanan doğrulayıcı: ',
+          'winner',
+          winnerNode.name,
+          ` (Mesafe: 0x${winnerNode.distance.toString(16).toUpperCase()})`
+        )
         addLog(`Blok #${currentBlockHeight.value} başarıyla zincire eklendi. Ödüller dağıtıldı (Model D).`, 'system')
       }
 
@@ -206,7 +201,7 @@ onUnmounted(() => {
     <!-- Top Telemetry Bar -->
     <div class="sim-header flex justify-between items-center bg-slate-900/[0.03] dark:bg-[#050911] border border-slate-300/70 dark:border-slate-800/80 p-4 sm:p-5 rounded-2xl font-mono text-xs sm:text-sm flex-wrap gap-4">
       <div class="flex items-center gap-3">
-        <span class="w-2.5 h-2.5 rounded-full bg-[#00bed6] animate-pulse"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[#00bed6] animate-pulse" aria-hidden="true"></span>
         <div>
           <span class="text-[#808284] mr-2">BLOK YÜKSEKLİĞİ:</span>
           <span class="text-[#00bed6] font-bold">#{{ currentBlockHeight }}</span>
@@ -219,7 +214,7 @@ onUnmounted(() => {
         </div>
         <button
           type="button"
-          class="px-3 py-1 rounded-lg bg-[#00bed6]/10 border border-[#00bed6]/30 text-[#00bed6] hover:bg-[#00bed6]/20 text-xs font-bold transition-colors cursor-pointer"
+          class="px-3 py-1.5 rounded-lg bg-[#00bed6]/10 border border-[#00bed6]/30 text-[#00bed6] hover:bg-[#00bed6]/20 text-xs font-bold transition-colors cursor-pointer"
           @click="runSimulationStep"
         >
           Sonraki Adım →
@@ -263,6 +258,7 @@ onUnmounted(() => {
           <span
             class="w-2 h-2 rounded-full shrink-0"
             :class="node.isWinner ? 'bg-[#00bed6] animate-ping' : node.isActive ? 'bg-[#00bed6]' : 'bg-[#808284]/40'"
+            aria-hidden="true"
           ></span>
         </div>
 
@@ -292,7 +288,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Telemetry Log Console -->
+    <!-- Telemetry Log Console (Safe Text Interpolation — No v-html / innerHTML) -->
     <div class="sim-log-wrapper flex flex-col gap-2.5">
       <div class="flex items-center justify-between">
         <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#808284]">
@@ -302,6 +298,8 @@ onUnmounted(() => {
       </div>
       <div
         ref="logContainer"
+        role="log"
+        aria-live="polite"
         class="sim-log bg-[#05080f] border border-slate-800 rounded-2xl p-5 h-[180px] overflow-y-auto font-mono text-xs flex flex-col gap-2"
       >
         <p
@@ -315,7 +313,9 @@ onUnmounted(() => {
           }"
         >
           <span class="text-[#808284] mr-1.5">[{{ log.time }}]</span>
-          <span v-html="log.message"></span>
+          <span>{{ log.message }}</span>
+          <strong v-if="log.highlight" class="text-white">{{ log.highlight }}</strong>
+          <span v-if="log.suffix">{{ log.suffix }}</span>
         </p>
       </div>
     </div>

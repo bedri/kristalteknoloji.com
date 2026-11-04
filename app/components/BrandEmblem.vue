@@ -1,15 +1,34 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   className: {
     type: String,
-    default: 'w-10 h-10'
+    default: ''
+  },
+  size: {
+    type: [Number, String],
+    default: null
   }
+})
+
+const resolvedClass = computed(() => {
+  if (props.className) return props.className
+  if (props.size) return 'shrink-0'
+  return 'w-10 h-10 shrink-0'
+})
+
+const resolvedStyle = computed(() => {
+  if (!props.size) return undefined
+  const px = typeof props.size === 'number' ? `${props.size}px` : props.size
+  return { width: px, height: px }
 })
 </script>
 
 <template>
   <svg
-    :class="className"
+    :class="resolvedClass"
+    :style="resolvedStyle"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="363 100 49 49"
     fill="none"

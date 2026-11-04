@@ -551,30 +551,50 @@ export const translations: Record<string, any> = {
   }
 }
 
-export function useTranslate() {
-  const { locale } = useLocale()
-  
-  const t = (key: string) => {
-    const keys = key.split('.')
-    let current: any = translations[locale.value]
-    for (const k of keys) {
-      if (current && current[k] !== undefined) {
-        current = current[k]
-      } else {
-        // Fallback to Turkish
-        let fallback: any = translations['tr']
-        for (const fk of keys) {
-          if (fallback && fallback[fk] !== undefined) {
-            fallback = fallback[fk]
-          } else {
-            return key
-          }
-        }
-        return fallback
-      }
+export type SupportedLocale = 'tr' | 'en'
+
+export const SUPPORTED_LOCALES: readonly SupportedLocale[] = Object.freeze(['tr', 'en'])
+
+export function isValidLocale(lang: unknown): lang is SupportedLocale {
+  return lang === 'tr' || lang === 'en'
+}
+
+export function normalizeLocale(lang: unknown): SupportedLocale {
+  return isValidLocale(lang) ? lang : 'tr'
+}
+
+function getOwnNestedValue(root: Record<string, any> | undefined, keys: string[]): string | undefined {
+  let current: any = root
+  for (const key of keys) {
+    if (
+      current !== null &&
+      typeof current === 'object' &&
+      Object.prototype.hasOwnProperty.call(current, key)
+    ) {
+      current = current[key]
+    } else {
+      return undefined
     }
-    return current
+  }
+  return typeof current === 'string' ? current : undefined
+}
+
+export function resolveTranslation(key: string, lang: unknown = 'tr'): string {
+  if (typeof key !== 'string' || key.length === 0) {
+    return ''
+  }
+  const activeLocale = normalizeLocale(lang)
+  const keys = key.split('.')
+
+  const localized = getOwnNestedValue(translations[activeLocale], keys)
+  if (localized !== undefined) {
+    return localized
   }
 
-  return { t, locale }
+  const fallback = getOwnNestedValue(translations.tr, keys)
+  if (fallback !== undefined) {
+    return fallback
+  }
+
+  return key
 }

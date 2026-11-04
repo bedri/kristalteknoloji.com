@@ -137,7 +137,7 @@ onUnmounted(() => {
     <BgMesh />
     <AppHeader />
 
-    <main class="pt-32 pb-24">
+    <main id="main-content" tabindex="-1" class="pt-32 pb-24">
       <div class="max-w-7xl mx-auto px-6">
         <!-- Section Header -->
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-10 border-b border-[#808284]/20 gap-8">

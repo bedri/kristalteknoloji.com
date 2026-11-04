@@ -52,6 +52,9 @@ const activeLink = computed(() => route.path)
       'scrolled bg-white/90 dark:bg-[#070b10]/90 backdrop-blur-xl border-[#808284]/20 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)]': isScrolled
     }"
   >
+    <a href="#main-content" class="skip-link visually-hidden">
+      {{ locale === 'tr' ? 'Ana içeriğe geç' : 'Skip to main content' }}
+    </a>
     <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-6">
       <!-- Brand Identity Wordmark -->
       <NuxtLink
@@ -63,7 +66,7 @@ const activeLink = computed(() => route.path)
       </NuxtLink>
 
       <!-- Desktop Architectural Navigation -->
-      <nav aria-label="Ana Navigasyon" class="hidden lg:flex items-center bg-white/70 dark:bg-[#0e1520]/80 border border-[#808284]/20 backdrop-blur-md rounded-full px-2 py-1.5 shadow-xs">
+      <nav :aria-label="locale === 'tr' ? 'Birincil' : 'Primary'" class="hidden lg:flex items-center bg-white/70 dark:bg-[#0e1520]/80 border border-[#808284]/20 backdrop-blur-md rounded-full px-2 py-1.5 shadow-xs">
         <ul class="flex items-center gap-1">
           <li v-for="link in navLinks" :key="link.to">
             <NuxtLink
@@ -96,6 +99,7 @@ const activeLink = computed(() => route.path)
         >
           <button
             type="button"
+            :aria-pressed="locale === 'tr'"
             class="px-2.5 py-1 rounded-md transition-all duration-200 cursor-pointer min-h-[28px]"
             :class="
               locale === 'tr'
@@ -108,6 +112,7 @@ const activeLink = computed(() => route.path)
           </button>
           <button
             type="button"
+            :aria-pressed="locale === 'en'"
             class="px-2.5 py-1 rounded-md transition-all duration-200 cursor-pointer min-h-[28px]"
             :class="
               locale === 'en'
@@ -206,7 +211,7 @@ const activeLink = computed(() => route.path)
             </button>
           </div>
 
-          <nav aria-label="Mobil Navigasyon" class="flex-grow">
+          <nav :aria-label="locale === 'tr' ? 'Mobil' : 'Mobile'" class="flex-grow">
             <ul class="flex flex-col gap-2">
               <li v-for="link in navLinks" :key="link.to">
                 <NuxtLink

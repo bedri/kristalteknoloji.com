@@ -77,7 +77,7 @@ const technologies = computed(() => [
     <BgMesh />
     <AppHeader />
 
-    <main class="pt-32 pb-24">
+    <main id="main-content" tabindex="-1" class="pt-32 pb-24">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="max-w-3xl mb-12">

@@ -8,27 +8,39 @@ const form = ref({
   name: '',
   email: '',
   subject: '',
-  message: ''
+  message: '',
+  website: '' // Honeypot field for bot spam protection
 })
 
 const loading = ref(false)
 
-// Keep aria-invalid synchronized with native validity after user interaction
-const syncAriaInvalid = (event) => {
-  const input = event.target
+const updateAriaInvalid = (input) => {
   if (!input || typeof input.matches !== 'function') return
+  let isUserInvalid = false
   try {
-    if (input.matches(':user-invalid')) {
-      input.setAttribute('aria-invalid', 'true')
-    } else if (input.validity && input.validity.valid) {
-      input.removeAttribute('aria-invalid')
-    }
+    isUserInvalid = input.matches(':user-invalid')
   } catch {
-    if (input.validity && !input.validity.valid) {
-      input.setAttribute('aria-invalid', 'true')
-    } else {
-      input.removeAttribute('aria-invalid')
-    }
+    isUserInvalid = Boolean(input.validity && !input.validity.valid)
+  }
+
+  if (isUserInvalid) {
+    input.setAttribute('aria-invalid', 'true')
+  } else {
+    input.removeAttribute('aria-invalid')
+  }
+}
+
+// Validate on blur to avoid premature warnings while typing
+const handleFieldBlur = (event) => {
+  updateAriaInvalid(event.target)
+}
+
+// Reset error states on input as soon as the user corrects a previously invalid field
+const handleFieldInput = (event) => {
+  const input = event.target
+  if (!input || typeof input.hasAttribute !== 'function') return
+  if (input.hasAttribute('aria-invalid') && input.getAttribute('aria-invalid') === 'true') {
+    updateAriaInvalid(input)
   }
 }
 
@@ -61,7 +73,8 @@ const handleSubmit = async (event) => {
       name: '',
       email: '',
       subject: '',
-      message: ''
+      message: '',
+      website: ''
     }
   } catch (error) {
     toast.add({
@@ -88,13 +101,13 @@ useHead({
     <BgMesh />
     <AppHeader />
 
-    <main class="pt-32 pb-24">
+    <main id="main-content" tabindex="-1" class="pt-32 pb-24">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           <!-- Corporate Contact & Partnership Channels -->
           <div class="lg:col-span-5 flex flex-col items-start text-left">
             <div class="kt-badge mb-5">
-              <span class="kt-badge-dot"></span>
+              <span class="kt-badge-dot" aria-hidden="true"></span>
               <span>{{ t('contact.tagline') }}</span>
             </div>
 
@@ -155,9 +168,24 @@ useHead({
           <!-- Corporate Contact Form -->
           <div class="lg:col-span-7">
             <form
+              method="POST"
+              action="/api/contact"
               class="kt-panel rounded-3xl p-6 sm:p-10 flex flex-col gap-6"
               @submit.prevent="handleSubmit"
             >
+              <!-- Honeypot field hidden from human users to trap automated spam bots -->
+              <div class="visually-hidden" aria-hidden="true">
+                <label for="website">Website</label>
+                <input
+                  id="website"
+                  v-model="form.website"
+                  type="text"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </div>
+
               <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-4">
                 <div>
                   <span class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#00bed6] block">
@@ -172,8 +200,8 @@ useHead({
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div class="form-group flex flex-col">
-                  <label for="name" class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
-                    {{ t('contact.name') }} <span class="text-[#00bed6]">*</span>
+                  <label for="name" class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                    {{ t('contact.name') }} <span class="text-[#00bed6]" aria-hidden="true">*</span>
                   </label>
                   <input
                     id="name"
@@ -182,21 +210,23 @@ useHead({
                     type="text"
                     required
                     minlength="2"
+                    maxlength="100"
                     :placeholder="t('contact.namePlaceholder')"
                     autocomplete="name"
                     aria-describedby="name-error"
                     class="kt-input"
-                    @blur="syncAriaInvalid"
-                    @input="syncAriaInvalid"
+                    @blur="handleFieldBlur"
+                    @input="handleFieldInput"
                   />
-                  <span id="name-error" class="kt-field-error" role="alert">
-                    {{ locale === 'tr' ? 'Lütfen adınızı ve soyadınızı girin.' : 'Please enter your full name.' }}
+                  <span id="name-error" class="kt-field-error" aria-live="polite">
+                    <span aria-hidden="true">⚠</span>
+                    <span>{{ locale === 'tr' ? 'Lütfen adınızı ve soyadınızı girin (2-100 karakter).' : 'Please enter your full name (2-100 characters).' }}</span>
                   </span>
                 </div>
 
                 <div class="form-group flex flex-col">
-                  <label for="email" class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
-                    {{ t('contact.email') }} <span class="text-[#00bed6]">*</span>
+                  <label for="email" class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                    {{ t('contact.email') }} <span class="text-[#00bed6]" aria-hidden="true">*</span>
                   </label>
                   <input
                     id="email"
@@ -204,22 +234,24 @@ useHead({
                     name="email"
                     type="email"
                     required
+                    maxlength="254"
                     :placeholder="t('contact.emailPlaceholder')"
                     autocomplete="email"
                     aria-describedby="email-error"
                     class="kt-input"
-                    @blur="syncAriaInvalid"
-                    @input="syncAriaInvalid"
+                    @blur="handleFieldBlur"
+                    @input="handleFieldInput"
                   />
-                  <span id="email-error" class="kt-field-error" role="alert">
-                    {{ locale === 'tr' ? 'Lütfen geçerli bir e-posta adresi girin.' : 'Please enter a valid email address.' }}
+                  <span id="email-error" class="kt-field-error" aria-live="polite">
+                    <span aria-hidden="true">⚠</span>
+                    <span>{{ locale === 'tr' ? 'Lütfen geçerli bir e-posta adresi girin.' : 'Please enter a valid email address.' }}</span>
                   </span>
                 </div>
               </div>
 
               <div class="form-group flex flex-col">
-                <label for="subject" class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
-                  {{ t('contact.subject') }} <span class="text-[#00bed6]">*</span>
+                <label for="subject" class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  {{ t('contact.subject') }} <span class="text-[#00bed6]" aria-hidden="true">*</span>
                 </label>
                 <input
                   id="subject"
@@ -228,21 +260,23 @@ useHead({
                   type="text"
                   required
                   minlength="3"
+                  maxlength="160"
                   :placeholder="t('contact.subjectPlaceholder')"
                   autocomplete="off"
                   aria-describedby="subject-error"
                   class="kt-input"
-                  @blur="syncAriaInvalid"
-                  @input="syncAriaInvalid"
+                  @blur="handleFieldBlur"
+                  @input="handleFieldInput"
                 />
-                <span id="subject-error" class="kt-field-error" role="alert">
-                  {{ locale === 'tr' ? 'Lütfen mesajınızın konusunu belirtin.' : 'Please specify a subject.' }}
+                <span id="subject-error" class="kt-field-error" aria-live="polite">
+                  <span aria-hidden="true">⚠</span>
+                  <span>{{ locale === 'tr' ? 'Lütfen mesajınızın konusunu belirtin (3-160 karakter).' : 'Please specify a subject (3-160 characters).' }}</span>
                 </span>
               </div>
 
               <div class="form-group flex flex-col">
-                <label for="message" class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
-                  {{ t('contact.message') }} <span class="text-[#00bed6]">*</span>
+                <label for="message" class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  {{ t('contact.message') }} <span class="text-[#00bed6]" aria-hidden="true">*</span>
                 </label>
                 <textarea
                   id="message"
@@ -251,15 +285,17 @@ useHead({
                   rows="5"
                   required
                   minlength="10"
+                  maxlength="4000"
                   :placeholder="t('contact.messagePlaceholder')"
                   autocomplete="off"
                   aria-describedby="message-error"
                   class="kt-input resize-y"
-                  @blur="syncAriaInvalid"
-                  @input="syncAriaInvalid"
+                  @blur="handleFieldBlur"
+                  @input="handleFieldInput"
                 ></textarea>
-                <span id="message-error" class="kt-field-error" role="alert">
-                  {{ locale === 'tr' ? 'Lütfen en az 10 karakterlik mesajınızı yazın.' : 'Please enter a message of at least 10 characters.' }}
+                <span id="message-error" class="kt-field-error" aria-live="polite">
+                  <span aria-hidden="true">⚠</span>
+                  <span>{{ locale === 'tr' ? 'Lütfen en az 10 karakterlik mesajınızı yazın.' : 'Please enter a message of at least 10 characters.' }}</span>
                 </span>
               </div>
 

@@ -1,20 +1,32 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   className: {
     type: String,
-    default: 'h-9 w-auto'
+    default: ''
+  },
+  heightClass: {
+    type: String,
+    default: 'h-9'
   }
+})
+
+const resolvedClass = computed(() => {
+  if (props.className) return props.className
+  return `${props.heightClass} w-auto`
 })
 </script>
 
 <template>
   <svg
-    :class="className"
+    :class="resolvedClass"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="125 100 345 62"
     role="img"
     aria-label="Kristal Teknoloji"
   >
+    <title>Kristal Teknoloji</title>
     <!-- "kristal" in Brand Cyan (#00bed6) -->
     <path class="fill-[#00bed6]" fill-rule="nonzero" d="M 144.34375 146.726562 L 134.59375 133.300781 L 144.34375 119.875 L 150.746094 119.875 L 141 133.300781 L 150.746094 146.726562 Z M 132.574219 146.726562 L 127.410156 146.726562 L 127.410156 112.648438 L 132.574219 112.648438 Z M 132.574219 146.726562 " />
     <path class="fill-[#00bed6]" fill-rule="nonzero" d="M 161.488281 128.21875 L 161.488281 146.726562 L 156.324219 146.726562 L 156.324219 119.835938 L 161.488281 119.835938 L 161.488281 120.910156 C 163.609375 119.53125 166.015625 118.84375 168.714844 118.84375 L 168.714844 124.007812 C 166.429688 124.007812 164.488281 124.804688 162.890625 126.402344 C 162.3125 126.980469 161.84375 127.585938 161.488281 128.21875 " />
