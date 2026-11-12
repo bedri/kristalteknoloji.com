@@ -237,7 +237,7 @@ const networkMetrics = computed(() => [
 const coreTechnologies = computed(() => [
   {
     code: 'ARCH // 01',
-    tag: 'VRF + X11KVS (13 ALGO)',
+    tag: 'VRF + 18 ALGO (3-PERM)',
     title: t('home.adam.title'),
     desc: t('home.adam.desc'),
     to: '/laboratuvar'

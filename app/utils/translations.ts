@@ -23,7 +23,7 @@ export const translations: Record<string, any> = {
       description: 'Ultra hızlı kooperatif konsensüs, Boneh-Lynn-Shacham (BLS) eşik çekilişleri ve gaz ücreti bulunmayan görsel akıllı sözleşmeler sunan yeni nesil blokzincir mimarisi.',
       exploreBtn: 'Özellikleri İncele',
       masternodes: 'Aktif Masternode Sayısı',
-      masternodeCollateral: '2.100 KRISTA Teminatı ile',
+      masternodeCollateral: '4.200 KRISTA Teminatı ile',
       circulatingSupply: 'Dolaşımdaki Arz',
       hardcap: '210M KRISTA Limitli',
       tps: 'Ağ TPS Değeri',
@@ -33,7 +33,7 @@ export const translations: Record<string, any> = {
       viewTechBtn: 'Ayrıntıları İncele',
       adam: {
         title: 'ADAM Konsensüsü',
-        desc: 'Doğrulanabilir rastgele işlevler (VRF) ve döngüsel tohum (rolling-seed) mekanizması kullanan konsensüs modeli. Her turda 11 madenci ve 1 koordinatör seçer. ASIC direnci için 13 dinamik bulmaca algoritmasını destekler.'
+        desc: 'Doğrulanabilir rastgele işlevler (VRF) ve döngüsel tohum (rolling-seed) mekanizması kullanan konsensüs modeli. Her turda 11 madenci ve 1 koordinatör seçer. ASIC direnci için 18 dinamik bulmaca algoritması ve 3’lü permütasyon VRF yapısını destekler.'
       },
       pobls: {
         title: 'Proof of BLS (PoBLS)',
@@ -41,7 +41,7 @@ export const translations: Record<string, any> = {
       },
       mescal: {
         title: 'MESCAL Sözleşmeleri',
-        desc: 'Öngörülebilir dijital anlaşmalar için gaz ücreti olmayan görsel akıllı sözleşme oyun alanı (sandbox). Cüzdanda kilitli 1.000 KRISTA teminatlı Coin-Lock madenci kayıtlarını doğrudan destekler.'
+        desc: 'Öngörülebilir dijital anlaşmalar için gaz ücreti olmayan görsel akıllı sözleşme oyun alanı (sandbox). Cüzdanda kilitli 250 KRISTA Coin-Lock ve 10 KRISTA PoW-Lock (2.900 blok) madenci kayıtlarını doğrudan destekler.'
       },
       heroBadge: 'Yarınları Şekillendiriyoruz',
       heroTitleStart: 'Geleceğin Teknolojik',
@@ -93,13 +93,13 @@ export const translations: Record<string, any> = {
       desc: 'KristaTech altyapısı üzerinde çalışan, blokzincir deneyimini kolaylaştıran ve zenginleştiren projelerimiz.',
       category: 'Kategori',
       features: 'Özellikler',
-      kristatechDesc: 'X11KVS temelli 13 dinamik algoritmalı ADAM konsensüsü, BLS eşik imzalı PoBLS loterisi ve gaz ücreti bulunmayan MESCAL akıllı sözleşmelerine sahip hibrit mutabakatlı yeni nesil blokzincir ağı.',
+      kristatechDesc: '18 dinamik algoritmalı 3’lü permütasyon VRF tabanlı ADAM konsensüsü, BLS eşik imzalı PoBLS loterisi ve gaz ücreti bulunmayan MESCAL akıllı sözleşmelerine sahip hibrit mutabakatlı yeni nesil blokzincir ağı.',
       activeProjects: 'Aktif Projeler',
       projectsDesc: 'Kendi laboratuvarımızda filizlenen, her biri merkeziyetsiz geleceğe farklı bir perspektif getiren yenilikçi teknoloji girişimlerimiz.',
       kristatech: {
         category: 'Katman-1 Blokzincir',
         title: 'KristaTech Coin (KRISTA)',
-        text: 'X11KVS temelli 13 dinamik algoritmalı ADAM konsensüsü, BLS eşik imzalı PoBLS loterisi ve gaz ücreti bulunmayan MESCAL akıllı sözleşmelerine sahip hibrit mutabakatlı yeni nesil blokzincir ağı.',
+        text: '18 dinamik algoritmalı 3’lü permütasyon VRF tabanlı ADAM konsensüsü, BLS eşik imzalı PoBLS loterisi ve gaz ücreti bulunmayan MESCAL akıllı sözleşmelerine sahip hibrit mutabakatlı yeni nesil blokzincir ağı.',
         feature1: 'ADAM & PoBLS Hibrit Konsensüs',
         feature2: 'Model D Sürdürülebilir Emisyon',
         feature3: 'MESCAL Gasless Akıllı Sözleşmeler',
@@ -241,7 +241,7 @@ export const translations: Record<string, any> = {
           spec1Name: 'Ekonomi Tasarımı',
           spec1Val: 'Enflasyon Korumalı Teşvik',
           spec2Name: 'Ödül Koşulu',
-          spec2Val: '100k Blok PoM Uptime Limiti',
+          spec2Val: '2.880 Blok On-Chain Uptime',
           spec3Name: 'Dağıtım Mimarisi',
           spec3Val: 'Otomatik Akıllı Dağıtım'
         }
@@ -300,7 +300,7 @@ export const translations: Record<string, any> = {
       circulatingSupply: 'Circulating Supply',
       hardcap: 'Limited to 210M KRISTA',
       masternodes: 'Active Masternode Count',
-      masternodeCollateral: 'With 2,100 KRISTA Collateral',
+      masternodeCollateral: 'With 4,200 KRISTA Collateral',
       tps: 'Network TPS Value',
       blockSpacing: '30s Block Spacing',
       coreTechTitle: 'Core Technologies',
@@ -308,7 +308,7 @@ export const translations: Record<string, any> = {
       viewTechBtn: 'Review Details',
       adam: {
         title: 'ADAM Consensus',
-        desc: 'Consensus model utilizing Verifiable Random Functions (VRF) and rolling-seed mechanism. Selects 11 miners and 1 coordinator per round. Supports 13 dynamic puzzle algorithms for ASIC resistance.'
+        desc: 'Consensus model utilizing Verifiable Random Functions (VRF) and rolling-seed mechanism. Selects 11 miners and 1 coordinator per round. Supports 18 dynamic puzzle algorithms with 3-permutation VRF for ASIC resistance.'
       },
       pobls: {
         title: 'Proof of BLS (PoBLS)',
@@ -316,7 +316,7 @@ export const translations: Record<string, any> = {
       },
       mescal: {
         title: 'MESCAL Contracts',
-        desc: 'Gas-free visual smart contract playground for predictable digital agreements. Directly supports Coin-Lock miner registrations with 1,000 KRISTA collateral locked in the wallet.'
+        desc: 'Gas-free visual smart contract playground for predictable digital agreements. Directly supports 250 KRISTA Coin-Lock and 10 KRISTA PoW-Lock (2,900 blocks) miner registrations locked in the wallet.'
       },
       heroBadge: 'Shaping the Tomorrows',
       heroTitleStart: 'Building the Technological',
@@ -368,13 +368,13 @@ export const translations: Record<string, any> = {
       desc: 'Our projects working on the KristaTech infrastructure that simplify and enrich the blockchain experience.',
       category: 'Category',
       features: 'Features',
-      kristatechDesc: 'Next-generation blockchain network with hybrid consensus featuring ADAM consensus with 13 dynamic algorithms based on X11KVS, PoBLS lottery with BLS threshold signatures, and gas-free MESCAL smart contracts.',
+      kristatechDesc: 'Next-generation blockchain network with hybrid consensus featuring ADAM consensus with 18 dynamic algorithms and 3-permutation VRF, PoBLS lottery with BLS threshold signatures, and gas-free MESCAL smart contracts.',
       activeProjects: 'Active Projects',
       projectsDesc: 'Our innovative technology ventures sprouting in our own laboratory, each bringing a different perspective to the decentralized future.',
       kristatech: {
         category: 'Layer-1 Blockchain',
         title: 'KristaTech Coin (KRISTA)',
-        text: 'Next-generation blockchain network with hybrid consensus featuring ADAM consensus with 13 dynamic algorithms based on X11KVS, PoBLS lottery with BLS threshold signatures, and gas-free MESCAL smart contracts.',
+        text: 'Next-generation blockchain network with hybrid consensus featuring ADAM consensus with 18 dynamic algorithms and 3-permutation VRF, PoBLS lottery with BLS threshold signatures, and gas-free MESCAL smart contracts.',
         feature1: 'ADAM & PoBLS Hybrid Consensus',
         feature2: 'Model D Sustainable Emission',
         feature3: 'MESCAL Gasless Smart Contracts',
@@ -516,7 +516,7 @@ export const translations: Record<string, any> = {
           spec1Name: 'Economic Design',
           spec1Val: 'Inflation-Protected Incentive',
           spec2Name: 'Reward Criteria',
-          spec2Val: '100k Block PoM Uptime Limit',
+          spec2Val: '2,880-Block On-Chain Uptime',
           spec3Name: 'Distribution Architecture',
           spec3Val: 'Automated Smart Distribution'
         }
