@@ -6,7 +6,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "preview": "HOST=127.0.0.1 NITRO_HOST=127.0.0.1 PORT=8090 NITRO_PORT=8090 nuxt preview --port 8090",
     "postinstall": "nuxt prepare",
     "test": "node --test tests/*.test.ts"
   },
