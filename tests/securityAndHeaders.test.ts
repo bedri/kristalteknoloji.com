@@ -104,4 +104,13 @@ describe('Security Headers & Codebase Security Audit', () => {
       )
     }
   })
+
+  it('uses adaptive CSS custom properties (--header-scroll-bg) for scroll-driven header theming in AppHeader.vue', () => {
+    const headerContent = fs.readFileSync(path.join(APP_DIR, 'components/AppHeader.vue'), 'utf-8')
+    const mainCssContent = fs.readFileSync(path.join(APP_DIR, 'assets/css/main.css'), 'utf-8')
+
+    assert.ok(headerContent.includes('var(--header-scroll-bg)'), 'AppHeader @keyframes must use var(--header-scroll-bg)')
+    assert.equal(headerContent.includes('shrink-header-dark'), false, 'AppHeader must not default to dark keyframe in light mode')
+    assert.ok(mainCssContent.includes('--header-scroll-bg:'), 'main.css must define adaptive --header-scroll-bg token')
+  })
 })

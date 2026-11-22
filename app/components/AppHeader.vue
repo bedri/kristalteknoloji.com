@@ -255,36 +255,20 @@ const activeLink = computed(() => route.path)
 @media (prefers-reduced-motion: no-preference) {
   @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
     .main-header {
-      animation: shrink-header-dark auto linear both;
-      animation-timeline: scroll(block root);
-      animation-range: 0px 90px;
-    }
-
-    :global(html.light) .main-header {
-      animation: shrink-header-light auto linear both;
+      animation: shrink-header auto linear both;
       animation-timeline: scroll(block root);
       animation-range: 0px 90px;
     }
   }
 }
 
-@keyframes shrink-header-dark {
+@keyframes shrink-header {
   to {
     padding-block: 0.75rem;
-    background-color: rgba(7, 11, 16, 0.9);
+    background-color: var(--header-scroll-bg);
     backdrop-filter: blur(20px);
-    border-bottom-color: rgba(128, 130, 132, 0.22);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
-  }
-}
-
-@keyframes shrink-header-light {
-  to {
-    padding-block: 0.75rem;
-    background-color: rgba(247, 249, 251, 0.92);
-    backdrop-filter: blur(20px);
-    border-bottom-color: rgba(128, 130, 132, 0.22);
-    box-shadow: 0 10px 30px -10px rgba(15, 20, 26, 0.08);
+    border-bottom-color: var(--border-hairline);
+    box-shadow: var(--header-scroll-shadow);
   }
 }
 </style>
