@@ -148,7 +148,7 @@ const { t } = useTranslate()
         <div class="flex items-center gap-4 font-mono text-[11px]">
           <span class="inline-flex items-center gap-1.5 text-[#52565b] dark:text-[#9ea2a8]">
             <span class="w-2 h-2 rounded-full bg-[#00bed6]" aria-hidden="true"></span>
-            ADAM + PoBLS + MESCAL
+            KRISTA Core v1.5.9.0 • ADAM 7+1+3 • KTDIP3 PoBLS • MESCAL
           </span>
         </div>
       </div>

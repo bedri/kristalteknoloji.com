@@ -2,25 +2,33 @@
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { computeXorDistance, findWinningValidator } from '~/utils/consensusLogic'
 
-const currentBlockHeight = ref(350)
+const currentBlockHeight = ref(5050)
 const currentTargetSeed = ref('0x762ee7ab...')
 const simStep = ref(0)
 const logs = ref([])
 const logContainer = ref(null)
 const wrapperEl = ref(null)
 
-const nodeNames = [
-  'KristalNode-Alpha', 'Nebula-Base', 'Velvet-Gate-03',
-  'KristaNode-Delta', 'Iceberg-MN', 'Prism-Düğüm-06',
-  'Quantum-V', 'Horizon-Valid', 'Aurora-MN',
-  'Cobalt-Link-10', 'Vertex-Validator'
+const nodeSpecs = [
+  { name: 'KristalNode-Alpha', track: 'MN • 4.200 KRISTA' },
+  { name: 'Nebula-Base', track: 'MN • 4.200 KRISTA' },
+  { name: 'Velvet-Gate-03', track: 'MN • 4.200 KRISTA' },
+  { name: 'KristaNode-Delta', track: 'MN • 4.200 KRISTA' },
+  { name: 'Iceberg-MN', track: 'MN • 4.200 KRISTA' },
+  { name: 'Prism-Düğüm-06', track: 'MN • 4.200 KRISTA' },
+  { name: 'Quantum-V', track: 'MN • 4.200 KRISTA' },
+  { name: 'Horizon-CoinLock', track: 'COIN-LOCK • 250 KRISTA' },
+  { name: 'Aurora-PoW-01', track: 'POW-LOCK • 10 KRISTA' },
+  { name: 'Cobalt-PoW-02', track: 'POW-LOCK • 10 KRISTA' },
+  { name: 'Vertex-OpenPoW', track: 'OPEN POW • 240 KEY (15-BIT)' }
 ]
 
 const validators = ref(
-  nodeNames.map((name, i) => ({
+  nodeSpecs.map((spec, i) => ({
     id: i,
-    name,
-    role: 'Masternode',
+    name: spec.name,
+    track: spec.track,
+    role: spec.track,
     ticket: 'Uptime: OK',
     distance: null,
     isActive: false,
@@ -29,10 +37,10 @@ const validators = ref(
 )
 
 const steps = [
-  { id: 0, code: '01', label: 'ADAM Seçim Katmanı' },
-  { id: 1, code: '02', label: 'PoBLS Bilet Dağıtımı' },
-  { id: 2, code: '03', label: 'XOR Mesafe Ölçümü' },
-  { id: 3, code: '04', label: 'Blok Proposer Seçimi' }
+  { id: 0, code: '01', label: 'ADAM 7+1+3 • 4.200:250:10 VRF' },
+  { id: 1, code: '02', label: 'KTDIP3 BLS12-381 LLMQ' },
+  { id: 2, code: '03', label: 'XOR Mesafe & 4.080 3-Perm' },
+  { id: 3, code: '04', label: 'Proposer & Eşit Model D' }
 ]
 
 let simInterval = null
@@ -75,7 +83,7 @@ const runSimulationStep = () => {
       validators.value.forEach(v => {
         v.isActive = false
         v.isWinner = false
-        v.role = 'Masternode'
+        v.role = v.track
         v.ticket = 'Uptime: OK'
         v.distance = null
       })
@@ -91,11 +99,11 @@ const runSimulationStep = () => {
       selectedIndices.forEach(idx => {
         const v = validators.value[idx]
         v.isActive = true
-        v.role = 'ADAM Doğrulayıcı'
-        v.ticket = 'Bilet bekliyor...'
+        v.role = `AKTİF QUORUM (${v.track.split(' • ')[0]})`
+        v.ticket = 'BLS12-381 bekliyor...'
       })
 
-      addLog('Mutabakat Çerçevesi: Uygun masternode havuzundan 5 aktif doğrulayıcı seçildi (ADAM Protokolü).', 'alert')
+      addLog('ADAM_FAIR_COORD_V4: 7+1+3 Komitesi (7 MN + 1 Coin-Lock + 2 Funded PoW + 1 Open PoW) ve 4.200:250:10 VRF (≥%75 MN) hazır; 5 aktif LLMQ üyesi seçildi.', 'alert')
       simStep.value = 1
       break
     }
@@ -107,7 +115,7 @@ const runSimulationStep = () => {
           v.ticket = ticketVal
         }
       })
-      addLog('PoBLS Loterisi: Aktif doğrulayıcılar için ephemeral BLS loteri biletleri dağıtıldı.', 'system')
+      addLog('KTDIP3 PoBLS (supranational/blst): 3/5–8/15 dinamik LLMQ operatör eşik imzaları (yalnızca aktif imzacı %10) doğrulandı.', 'system')
       simStep.value = 2
       break
     }
@@ -120,7 +128,7 @@ const runSimulationStep = () => {
           v.distance = computeXorDistance(v.ticket, currentTargetSeed.value)
         }
       })
-      addLog(`Hedef Tohum T_target = ${currentTargetSeed.value} oluşturuldu. XOR mesafeleri hesaplanıyor...`, 'system')
+      addLog(`Hedef Tohum T_target = ${currentTargetSeed.value} (17 Tek Geçişli Algo • 4.080 3-Perm VRF) oluşturuldu. XOR mesafeleri hesaplanıyor...`, 'system')
       simStep.value = 3
       break
     }
@@ -139,7 +147,7 @@ const runSimulationStep = () => {
           winnerNode.name,
           ` (Mesafe: 0x${winnerNode.distance.toString(16).toUpperCase()})`
         )
-        addLog(`Blok #${currentBlockHeight.value} başarıyla zincire eklendi. Ödüller dağıtıldı (Model D).`, 'system')
+        addLog(`Blok #${currentBlockHeight.value} eklendi. Model D (%93 Net Havuz: %35 MN / %40 Eşit [%40/11] / %15 Üretici [%12+%3] / %10 LLMQ) dağıtıldı.`, 'system')
       }
 
       simStep.value = 0

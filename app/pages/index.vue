@@ -213,15 +213,15 @@ const networkMetrics = computed(() => [
   },
   {
     code: 'METRIC // 02',
-    value: '11 + 1',
-    unit: 'NODES',
+    value: '7+1+3',
+    unit: '11 + 1 NODES',
     label: t('home.masternodes'),
     sub: t('home.masternodeCollateral')
   },
   {
     code: 'METRIC // 03',
     value: '30s',
-    unit: 'FINALITY',
+    unit: 'MODEL D',
     label: t('home.tps'),
     sub: t('home.blockSpacing')
   },
@@ -237,21 +237,21 @@ const networkMetrics = computed(() => [
 const coreTechnologies = computed(() => [
   {
     code: 'ARCH // 01',
-    tag: 'VRF + 18 ALGO (3-PERM)',
+    tag: '7+1+3 • 17 ALGO (4,080 PERM)',
     title: t('home.adam.title'),
     desc: t('home.adam.desc'),
     to: '/laboratuvar'
   },
   {
     code: 'ARCH // 02',
-    tag: 'BLS12-381 / SECP256K1',
+    tag: 'BLST • KTDIP3 BLS12-381',
     title: t('home.pobls.title'),
     desc: t('home.pobls.desc'),
     to: '/laboratuvar'
   },
   {
     code: 'ARCH // 03',
-    tag: 'GASLESS CSCRIPT SANDBOX',
+    tag: 'ZERO-GAS VM • 250 / 10 / 0 LOCK',
     title: t('home.mescal.title'),
     desc: t('home.mescal.desc'),
     to: '/laboratuvar'
@@ -425,8 +425,8 @@ onUnmounted(() => {
 
                 <!-- Technical Frame Footer -->
                 <div class="flex items-center justify-between pt-4 mt-4 border-t border-[#808284]/15 font-mono text-[11px] text-[#808284]">
-                  <span>PROTOCOL: ADAM + PoBLS</span>
-                  <span class="text-[#0f141a] dark:text-[#c4c7cc]">360° INTERACTIVE</span>
+                  <span>CORE v1.5.9.0 // PROTO 70983</span>
+                  <span class="text-[#0f141a] dark:text-[#c4c7cc]">ADAM 7+1+3 • POBLS</span>
                 </div>
               </div>
             </div>
