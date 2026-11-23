@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 const { t } = useTranslate()
+const { locale } = useLocale()
 
 useHead({
   title: computed(() => `Kristal Teknoloji | ${t('home.title')}`),
@@ -237,21 +238,21 @@ const networkMetrics = computed(() => [
 const coreTechnologies = computed(() => [
   {
     code: 'ARCH // 01',
-    tag: '7+1+3 • 17 ALGO (4,080 PERM)',
+    tag: '7+1+3 • 17 ALGO • 4,080 PERM',
     title: t('home.adam.title'),
     desc: t('home.adam.desc'),
     to: '/laboratuvar'
   },
   {
     code: 'ARCH // 02',
-    tag: 'BLST • KTDIP3 BLS12-381',
+    tag: 'KTDIP3 • BLS12-381 • BIP324',
     title: t('home.pobls.title'),
     desc: t('home.pobls.desc'),
     to: '/laboratuvar'
   },
   {
     code: 'ARCH // 03',
-    tag: 'ZERO-GAS VM • 250 / 10 / 0 LOCK',
+    tag: 'MESCAL v2 • TAPROOT (kt1p)',
     title: t('home.mescal.title'),
     desc: t('home.mescal.desc'),
     to: '/laboratuvar'
@@ -572,7 +573,7 @@ onUnmounted(() => {
                   </div>
 
                   <span class="font-mono text-xs font-bold text-[#808284] group-hover:text-[#00bed6] transition-colors">
-                    BÖLÜM // {{ item.code }}
+                    {{ locale === 'tr' ? 'BÖLÜM' : 'SECTION' }} // {{ item.code }}
                   </span>
                 </div>
 

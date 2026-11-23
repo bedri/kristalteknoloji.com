@@ -1,5 +1,6 @@
 <script setup>
 const { t } = useTranslate()
+const { locale } = useLocale()
 </script>
 
 <template>
@@ -77,7 +78,7 @@ const { t } = useTranslate()
             </li>
             <li>
               <a
-                href="https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/ADAM_Consensus.md"
+                :href="locale === 'tr' ? 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/ADAM_Consensus_TR.md' : 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/ADAM_Consensus.md'"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-sm text-[#52565b] dark:text-[#9ea2a8] hover:text-[#00bed6] transition-colors duration-200"
@@ -87,12 +88,22 @@ const { t } = useTranslate()
             </li>
             <li>
               <a
-                href="https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/MESCAL.md"
+                :href="locale === 'tr' ? 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/MESCAL_TR.md' : 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/MESCAL.md'"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-sm text-[#52565b] dark:text-[#9ea2a8] hover:text-[#00bed6] transition-colors duration-200"
               >
                 MESCAL Docs
+              </a>
+            </li>
+            <li>
+              <a
+                :href="locale === 'tr' ? 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/Whitepaper_TR.md' : 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/Whitepaper.md'"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-[#52565b] dark:text-[#9ea2a8] hover:text-[#00bed6] transition-colors duration-200"
+              >
+                Whitepaper
               </a>
             </li>
           </ul>
@@ -113,6 +124,16 @@ const { t } = useTranslate()
                 class="text-sm text-[#52565b] dark:text-[#9ea2a8] hover:text-[#00bed6] transition-colors duration-200"
               >
                 KristaTech Coin (KRISTA)
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/bedri/KristaTech-KRISTA/releases"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-[#52565b] dark:text-[#9ea2a8] hover:text-[#00bed6] transition-colors duration-200"
+              >
+                {{ t('common.downloadWallet') }}
               </a>
             </li>
             <li>
@@ -148,7 +169,7 @@ const { t } = useTranslate()
         <div class="flex items-center gap-4 font-mono text-[11px]">
           <span class="inline-flex items-center gap-1.5 text-[#52565b] dark:text-[#9ea2a8]">
             <span class="w-2 h-2 rounded-full bg-[#00bed6]" aria-hidden="true"></span>
-            KRISTA Core v1.5.9.0 • ADAM 7+1+3 • KTDIP3 PoBLS • MESCAL
+            KRISTA Core v1.5.9.0 (Proto 70983) • ADAM 7+1+3 • KTDIP3 PoBLS • MESCAL v2 • BIP324
           </span>
         </div>
       </div>

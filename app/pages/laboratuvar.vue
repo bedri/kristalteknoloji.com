@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 
 const { t } = useTranslate()
+const { locale } = useLocale()
 
 useHead({
   title: computed(() => t('lab.seoTitle')),
@@ -16,11 +17,13 @@ const technologies = computed(() => [
   {
     id: 'mescal',
     code: 'SPEC // 01',
-    name: 'MESCAL Smart Contract Language',
+    name: 'MESCAL v2 Taproot Smart Contracts',
     acronym: 'MESCAL',
     tagline: t('lab.tech.mescal.tagline'),
     description: t('lab.tech.mescal.desc'),
-    docUrl: 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/MESCAL.md',
+    docUrl: locale.value === 'tr'
+      ? 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/MESCAL_TR.md'
+      : 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/MESCAL.md',
     specs: [
       { name: t('lab.tech.mescal.spec1Name'), value: t('lab.tech.mescal.spec1Val') },
       { name: t('lab.tech.mescal.spec2Name'), value: t('lab.tech.mescal.spec2Val') },
@@ -34,7 +37,9 @@ const technologies = computed(() => [
     acronym: 'ADAM',
     tagline: t('lab.tech.adam.tagline'),
     description: t('lab.tech.adam.desc'),
-    docUrl: 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/ADAM_Consensus.md',
+    docUrl: locale.value === 'tr'
+      ? 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/ADAM_Consensus_TR.md'
+      : 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/ADAM_Consensus.md',
     specs: [
       { name: t('lab.tech.adam.spec1Name'), value: t('lab.tech.adam.spec1Val') },
       { name: t('lab.tech.adam.spec2Name'), value: t('lab.tech.adam.spec2Val') },
@@ -48,7 +53,9 @@ const technologies = computed(() => [
     acronym: 'PoBLS',
     tagline: t('lab.tech.pobls.tagline'),
     description: t('lab.tech.pobls.desc'),
-    docUrl: 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/PoBLS_Consensus_TR.md',
+    docUrl: locale.value === 'tr'
+      ? 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/PoBLS_Consensus_TR.md'
+      : 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/PoBLS_Consensus.md',
     specs: [
       { name: t('lab.tech.pobls.spec1Name'), value: t('lab.tech.pobls.spec1Val') },
       { name: t('lab.tech.pobls.spec2Name'), value: t('lab.tech.pobls.spec2Val') },
@@ -62,7 +69,9 @@ const technologies = computed(() => [
     acronym: 'Model D',
     tagline: t('lab.tech.modelD.tagline'),
     description: t('lab.tech.modelD.desc'),
-    docUrl: 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/Tokenomics_Study_TR.md',
+    docUrl: locale.value === 'tr'
+      ? 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/Tokenomics_Study_TR.md'
+      : 'https://github.com/bedri/KristaTech-KRISTA/blob/develop/doc/Tokenomics_Study.md',
     specs: [
       { name: t('lab.tech.modelD.spec1Name'), value: t('lab.tech.modelD.spec1Val') },
       { name: t('lab.tech.modelD.spec2Name'), value: t('lab.tech.modelD.spec2Val') },

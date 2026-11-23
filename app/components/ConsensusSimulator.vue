@@ -1,6 +1,8 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { computeXorDistance, findWinningValidator } from '~/utils/consensusLogic'
+
+const { locale } = useLocale()
 
 const currentBlockHeight = ref(5050)
 const currentTargetSeed = ref('0x762ee7ab...')
@@ -10,17 +12,17 @@ const logContainer = ref(null)
 const wrapperEl = ref(null)
 
 const nodeSpecs = [
-  { name: 'KristalNode-Alpha', track: 'MN • 4.200 KRISTA' },
-  { name: 'Nebula-Base', track: 'MN • 4.200 KRISTA' },
-  { name: 'Velvet-Gate-03', track: 'MN • 4.200 KRISTA' },
-  { name: 'KristaNode-Delta', track: 'MN • 4.200 KRISTA' },
-  { name: 'Iceberg-MN', track: 'MN • 4.200 KRISTA' },
-  { name: 'Prism-Düğüm-06', track: 'MN • 4.200 KRISTA' },
-  { name: 'Quantum-V', track: 'MN • 4.200 KRISTA' },
-  { name: 'Horizon-CoinLock', track: 'COIN-LOCK • 250 KRISTA' },
-  { name: 'Aurora-PoW-01', track: 'POW-LOCK • 10 KRISTA' },
-  { name: 'Cobalt-PoW-02', track: 'POW-LOCK • 10 KRISTA' },
-  { name: 'Vertex-OpenPoW', track: 'OPEN POW • 240 KEY (15-BIT)' }
+  { name: 'KristalNode-Alpha', track: 'MN • 4.200 KRISTA', trackEn: 'MN • 4,200 KRISTA' },
+  { name: 'Nebula-Base', track: 'MN • 4.200 KRISTA', trackEn: 'MN • 4,200 KRISTA' },
+  { name: 'Velvet-Gate-03', track: 'MN • 4.200 KRISTA', trackEn: 'MN • 4,200 KRISTA' },
+  { name: 'KristaNode-Delta', track: 'MN • 4.200 KRISTA', trackEn: 'MN • 4,200 KRISTA' },
+  { name: 'Iceberg-MN', track: 'MN • 4.200 KRISTA', trackEn: 'MN • 4,200 KRISTA' },
+  { name: 'Prism-Düğüm-06', track: 'MN • 4.200 KRISTA', trackEn: 'MN • 4,200 KRISTA' },
+  { name: 'Quantum-V', track: 'MN • 4.200 KRISTA', trackEn: 'MN • 4,200 KRISTA' },
+  { name: 'Horizon-CoinLock', track: 'COIN-LOCK • 250 KRISTA', trackEn: 'COIN-LOCK • 250 KRISTA' },
+  { name: 'Aurora-PoW-01', track: 'POW-LOCK • 10 KRISTA', trackEn: 'POW-LOCK • 10 KRISTA' },
+  { name: 'Cobalt-PoW-02', track: 'POW-LOCK • 10 KRISTA', trackEn: 'POW-LOCK • 10 KRISTA' },
+  { name: 'Vertex-OpenPoW', track: 'OPEN POW • 240 KEY (15-BIT)', trackEn: 'OPEN POW • 240 KEY (15-BIT)' }
 ]
 
 const validators = ref(
@@ -28,7 +30,8 @@ const validators = ref(
     id: i,
     name: spec.name,
     track: spec.track,
-    role: spec.track,
+    trackEn: spec.trackEn,
+    role: locale.value === 'tr' ? spec.track : spec.trackEn,
     ticket: 'Uptime: OK',
     distance: null,
     isActive: false,
@@ -36,12 +39,21 @@ const validators = ref(
   }))
 )
 
-const steps = [
-  { id: 0, code: '01', label: 'ADAM 7+1+3 • 4.200:250:10 VRF' },
-  { id: 1, code: '02', label: 'KTDIP3 BLS12-381 LLMQ' },
-  { id: 2, code: '03', label: 'XOR Mesafe & 4.080 3-Perm' },
-  { id: 3, code: '04', label: 'Proposer & Eşit Model D' }
-]
+const steps = computed(() =>
+  locale.value === 'tr'
+    ? [
+        { id: 0, code: '01', label: 'ADAM 7+1+3 • 4.200:250:10 VRF' },
+        { id: 1, code: '02', label: 'KTDIP3 BLS12-381 LLMQ' },
+        { id: 2, code: '03', label: 'XOR Mesafe & 4.080 3-Perm' },
+        { id: 3, code: '04', label: 'Proposer & Eşit Model D' }
+      ]
+    : [
+        { id: 0, code: '01', label: 'ADAM 7+1+3 • 4,200:250:10 VRF' },
+        { id: 1, code: '02', label: 'KTDIP3 BLS12-381 LLMQ' },
+        { id: 2, code: '03', label: 'XOR Distance & 4,080 3-Perm' },
+        { id: 3, code: '04', label: 'Proposer & Equal Model D' }
+      ]
+)
 
 let simInterval = null
 let intersectionObserver = null
@@ -78,12 +90,13 @@ watch(() => logs.value.length, async () => {
 })
 
 const runSimulationStep = () => {
+  const isTr = locale.value === 'tr'
   switch (simStep.value) {
     case 0: {
       validators.value.forEach(v => {
         v.isActive = false
         v.isWinner = false
-        v.role = v.track
+        v.role = isTr ? v.track : v.trackEn
         v.ticket = 'Uptime: OK'
         v.distance = null
       })
@@ -99,11 +112,17 @@ const runSimulationStep = () => {
       selectedIndices.forEach(idx => {
         const v = validators.value[idx]
         v.isActive = true
-        v.role = `AKTİF QUORUM (${v.track.split(' • ')[0]})`
-        v.ticket = 'BLS12-381 bekliyor...'
+        const baseTrack = (isTr ? v.track : v.trackEn).split(' • ')[0]
+        v.role = isTr ? `AKTİF QUORUM (${baseTrack})` : `ACTIVE QUORUM (${baseTrack})`
+        v.ticket = isTr ? 'BLS12-381 bekliyor...' : 'Awaiting BLS12-381...'
       })
 
-      addLog('ADAM_FAIR_COORD_V4: 7+1+3 Komitesi (7 MN + 1 Coin-Lock + 2 Funded PoW + 1 Open PoW) ve 4.200:250:10 VRF (≥%75 MN) hazır; 5 aktif LLMQ üyesi seçildi.', 'alert')
+      addLog(
+        isTr
+          ? 'ADAM_FAIR_COORD_V4: 7+1+3 Komitesi (7 MN + 1 Coin-Lock + 2 Funded PoW + 1 Open PoW) ve 4.200:250:10 Orantılı VRF (≥%75 MN tabanı) hazır; 5 aktif LLMQ üyesi seçildi.'
+          : 'ADAM_FAIR_COORD_V4: 7+1+3 Committee (7 MN + 1 Coin-Lock + 2 Funded PoW + 1 Open PoW) & 4,200:250:10 Proportional VRF (≥75% MN floor) ready; 5 active LLMQ members elected.',
+        'alert'
+      )
       simStep.value = 1
       break
     }
@@ -115,7 +134,12 @@ const runSimulationStep = () => {
           v.ticket = ticketVal
         }
       })
-      addLog('KTDIP3 PoBLS (supranational/blst): 3/5–8/15 dinamik LLMQ operatör eşik imzaları (yalnızca aktif imzacı %10) doğrulandı.', 'system')
+      addLog(
+        isTr
+          ? 'KTDIP3 PoBLS (supranational/blst): 3/5–8/15 dinamik LLMQ operatör eşik imzaları (yalnızca aktif imzacı %10, -5/+5 PoSe) doğrulandı.'
+          : 'KTDIP3 PoBLS (supranational/blst): Dynamic 3-of-5 to 8-of-15 LLMQ operator threshold signatures (signer-only 10%, -5/+5 PoSe) verified.',
+        'system'
+      )
       simStep.value = 2
       break
     }
@@ -128,7 +152,12 @@ const runSimulationStep = () => {
           v.distance = computeXorDistance(v.ticket, currentTargetSeed.value)
         }
       })
-      addLog(`Hedef Tohum T_target = ${currentTargetSeed.value} (17 Tek Geçişli Algo • 4.080 3-Perm VRF) oluşturuldu. XOR mesafeleri hesaplanıyor...`, 'system')
+      addLog(
+        isTr
+          ? `Hedef Tohum T_target = ${currentTargetSeed.value} (17 Tek Geçişli Algo • 4.080 3-Perm VRF) oluşturuldu. XOR mesafeleri hesaplanıyor...`
+          : `Target Seed T_target = ${currentTargetSeed.value} (17 Uniform Single-Pass Algos • 4,080 3-Perm VRF) generated. Computing XOR distances...`,
+        'system'
+      )
       simStep.value = 3
       break
     }
@@ -138,16 +167,23 @@ const runSimulationStep = () => {
 
       if (winnerNode && winnerNode.distance !== null) {
         winnerNode.isWinner = true
-        winnerNode.role = 'BLOK PROPOSER (KAZANAN)'
+        winnerNode.role = isTr ? 'BLOK PROPOSER (KAZANAN)' : 'BLOCK PROPOSER (WINNER)'
         currentBlockHeight.value++
 
         addLog(
-          'Kazanan doğrulayıcı: ',
+          isTr ? 'Kazanan doğrulayıcı: ' : 'Winning validator: ',
           'winner',
           winnerNode.name,
-          ` (Mesafe: 0x${winnerNode.distance.toString(16).toUpperCase()})`
+          isTr
+            ? ` (Mesafe: 0x${winnerNode.distance.toString(16).toUpperCase()})`
+            : ` (Distance: 0x${winnerNode.distance.toString(16).toUpperCase()})`
         )
-        addLog(`Blok #${currentBlockHeight.value} eklendi. Model D (%93 Net Havuz: %35 MN / %40 Eşit [%40/11] / %15 Üretici [%12+%3] / %10 LLMQ) dağıtıldı.`, 'system')
+        addLog(
+          isTr
+            ? `Blok #${currentBlockHeight.value} eklendi. Model D (%93 Net Havuz: %35 MN / %40 Eşit [%40/11] / %15 Üretici [%12+%3] / %10 LLMQ) dağıtıldı.`
+            : `Block #${currentBlockHeight.value} sealed. Model D Equal-Pay (93% Net: 35% MN / 40% [40%/11] / 15% Producer [12%+3%] / 10% LLMQ) distributed.`,
+          'system'
+        )
       }
 
       simStep.value = 0
@@ -174,8 +210,14 @@ const handleVisibilityAutoState = (e) => {
 }
 
 onMounted(() => {
-  addLog('Simülatör başlatılıyor...', 'system')
-  addLog('PoBLS Kripto Loterisi simülasyonu çalışıyor.', 'system')
+  const isTr = locale.value === 'tr'
+  addLog(isTr ? 'Simülatör başlatılıyor...' : 'Initializing consensus simulator...', 'system')
+  addLog(
+    isTr
+      ? 'PoBLS Kripto Loterisi & ADAM 7+1+3 simülasyonu çalışıyor.'
+      : 'Running PoBLS Crypto Lottery & ADAM 7+1+3 simulation.',
+    'system'
+  )
   runSimulationStep()
   startTimer()
 
@@ -211,13 +253,13 @@ onUnmounted(() => {
       <div class="flex items-center gap-3">
         <span class="w-2.5 h-2.5 rounded-full bg-[#00bed6] animate-pulse" aria-hidden="true"></span>
         <div>
-          <span class="text-[#808284] mr-2">BLOK YÜKSEKLİĞİ:</span>
+          <span class="text-[#808284] mr-2">{{ locale === 'tr' ? 'BLOK YÜKSEKLİĞİ:' : 'BLOCK HEIGHT:' }}</span>
           <span class="text-[#00bed6] font-bold">#{{ currentBlockHeight }}</span>
         </div>
       </div>
       <div class="flex items-center gap-4">
         <div>
-          <span class="text-[#808284] mr-2">HEDEF TOHUM (T_target):</span>
+          <span class="text-[#808284] mr-2">{{ locale === 'tr' ? 'HEDEF TOHUM (T_target):' : 'TARGET SEED (T_target):' }}</span>
           <span class="text-slate-800 dark:text-[#97d1dc] font-bold">{{ currentTargetSeed }}</span>
         </div>
         <button
@@ -225,7 +267,7 @@ onUnmounted(() => {
           class="px-3 py-1.5 rounded-lg bg-[#00bed6]/10 border border-[#00bed6]/30 text-[#00bed6] hover:bg-[#00bed6]/20 text-xs font-bold transition-colors cursor-pointer"
           @click="runSimulationStep"
         >
-          Sonraki Adım →
+          {{ locale === 'tr' ? 'Sonraki Adım →' : 'Next Step →' }}
         </button>
       </div>
     </div>
@@ -279,9 +321,9 @@ onUnmounted(() => {
 
         <div class="node-ticket text-xs text-[#808284]">
           <span v-if="node.isActive">
-            Bilet: <span class="text-slate-800 dark:text-slate-200 font-semibold">{{ node.ticket }}</span>
+            {{ locale === 'tr' ? 'Bilet:' : 'Ticket:' }} <span class="text-slate-800 dark:text-slate-200 font-semibold">{{ node.ticket }}</span>
           </span>
-          <span v-else>Durum: <span class="text-slate-600 dark:text-slate-400">Uptime OK</span></span>
+          <span v-else>{{ locale === 'tr' ? 'Durum:' : 'Status:' }} <span class="text-slate-600 dark:text-slate-400">Uptime OK</span></span>
         </div>
 
         <div

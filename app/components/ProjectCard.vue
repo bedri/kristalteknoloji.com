@@ -72,12 +72,12 @@ const primaryDomain = computed(() => {
       <!-- Action Links -->
       <div class="project-links flex flex-wrap gap-4 w-full pt-2">
         <a
-          v-for="link in project.links"
+          v-for="(link, lIdx) in project.links"
           :key="link.href"
           :href="link.href"
           :target="link.target ? '_blank' : '_self'"
           :rel="link.target ? 'noopener noreferrer' : undefined"
-          class="kt-btn-primary"
+          :class="lIdx === 0 ? 'kt-btn-primary' : 'kt-btn-secondary'"
         >
           <span>{{ link.label }}</span>
           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -117,18 +117,18 @@ const primaryDomain = computed(() => {
         <div v-else-if="project.id === 'explorer'" class="relative z-10 my-auto flex items-center justify-center gap-3 px-2">
           <div class="w-16 h-16 rounded-xl border border-[#808284]/40 bg-[#111823] flex flex-col items-center justify-center font-mono">
             <span class="text-[9px] text-[#808284]">BLK</span>
-            <span class="text-xs font-bold text-[#c4c7cc]">#998</span>
+            <span class="text-xs font-bold text-[#c4c7cc]">#5049</span>
           </div>
           <div class="w-6 h-[2px] bg-[#00bed6]/60"></div>
           <div class="w-20 h-20 rounded-xl border-2 border-[#00bed6] bg-[#00bed6]/12 flex flex-col items-center justify-center font-mono shadow-[0_0_25px_rgba(0,190,214,0.22)]">
             <span class="text-[9px] text-[#00bed6] font-bold">VERIFIED</span>
-            <span class="text-sm font-bold text-white">#999</span>
+            <span class="text-sm font-bold text-white">#5050</span>
             <span class="text-[8px] text-[#97d1dc]">0x8f...2a</span>
           </div>
           <div class="w-6 h-[2px] bg-[#00bed6]/60"></div>
           <div class="w-16 h-16 rounded-xl border border-[#808284]/40 bg-[#111823] flex flex-col items-center justify-center font-mono">
             <span class="text-[9px] text-[#808284]">NEXT</span>
-            <span class="text-xs font-bold text-[#c4c7cc]">#1000</span>
+            <span class="text-xs font-bold text-[#c4c7cc]">#5051</span>
           </div>
         </div>
 

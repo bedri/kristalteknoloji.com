@@ -33,15 +33,15 @@ export const translations: Record<string, any> = {
       viewTechBtn: 'Ayrıntıları İncele',
       adam: {
         title: 'ADAM Konsensüsü (7+1+3 Dual-Track)',
-        desc: 'Doğrulanabilir rastgele işlevler (VRF) ve döngüsel tohum (rolling-seed) mekanizması kullanan konsensüs modeli. Her turda 7+1+3 Dual-Track komitesi (7 Masternode, 1 izole 250 KRISTA Coin-Lock, 2 Fonlu 10 KRISTA PoW-Lock ve 1 kalıcı 0 KRISTA Açık PoW) ile 4.200:250:10 adil karekök ağırlıklı VRF koordinatörü (en az %75 MN tabanı) seçer; 17 tek geçişli algoritma ve 4.080 3’lü permütasyon VRF yapısını kullanır (X11KVS yalnızca PoW Kaydı içindir).'
+        desc: 'Doğrulanabilir rastgele işlevler (VRF) ve döngüsel tohum (rolling-seed) mekanizması kullanan konsensüs modeli. Her turda 7+1+3 Dual-Track komitesi (7 Masternode, 1 izole 250 KRISTA Coin-Lock, 2 Fonlu 10 KRISTA PoW-Lock ve 1 kalıcı 0 KRISTA Açık PoW) ile 4.200:250:10 orantılı teminat ağırlıklı VRF koordinatörü (ADAM_FAIR_COORD_V4, en az %75 MN tabanı) seçer; 17 tek geçişli algoritma ve 4.080 3’lü permütasyon VRF yapısını kullanır (X11KVS yalnızca PoW Kaydı içindir).'
       },
       pobls: {
         title: 'Proof of BLS (PoBLS)',
-        desc: 'supranational/blst kütüphanesi ve KTDIP3 deterministik operatör anahtarlarıyla güçlendirilmiş kriptografik eşik imza katmanı. Blok 4.800’de 4.080’li PoMBL v12 permütasyonu, Blok 5.000 itibarıyla da 3/5’ten 8/15’e dinamik LLMQ kesinlik quorumu (yalnızca aktif imzacılara %10 ödül) devreye girer.'
+        desc: 'supranational/blst kütüphanesi, KTDIP3 (wallet.dat mnmeta) deterministik operatör anahtarları ve BIP324 şifreli P2P v2 ile güçlendirilmiş kesinlik katmanı. Blok 4.800’de 4.080’li PoMBL v12 permütasyonu, Blok 5.000 itibarıyla da 3/5’ten 8/15’e dinamik BLS12-381 LLMQ kesinlik quorumu (yalnızca aktif imzacılara 1 blok gecikmeli %10 ödül, -5/+5 PoSe) devreye girer.'
       },
       mescal: {
         title: 'MESCAL Sözleşmeleri',
-        desc: 'Öngörülebilir dijital anlaşmalar için gaz ücreti olmayan deterministik görsel akıllı sözleşme sanal makinesi (cscript_sandbox). 250 KRISTA Coin-Lock ve 10 KRISTA PoW-Lock (2.880 blok CLTV, 2.900 blok cüzdan tamponu) madenci kayıtlarını, Blok 2.500+ kalıcı 0 KRISTA Açık PoW katılımını, emanet, vesting (CSV) ve HTLC atomik takaslarını doğrudan destekler.'
+        desc: 'Öngörülebilir dijital anlaşmalar için gaz açık artırması olmayan deterministik MESCAL v2 Taproot (kt1p... Bech32m) ve CScript (CMescal) akıllı sözleşme motoru. Cüzdan içi JSON/YAML görsel tasarımcısı ve BIP174 PSBT desteğiyle 250 KRISTA Coin-Lock, 10 KRISTA Fonlu PoW-Lock (2.880 blok CLTV + 20 blok cüzdan tamponu), Blok 2.500+ kalıcı 0 KRISTA Açık PoW, M-of-N çoklu imza, zaman kilidi, vesting (CSV) ve HTLC atomik takaslarını doğrudan destekler.'
       },
       heroBadge: 'Yarınları Şekillendiriyoruz',
       heroTitleStart: 'Geleceğin Teknolojik',
@@ -57,7 +57,7 @@ export const translations: Record<string, any> = {
       teaserAboutDesc: 'Fikirleri ve dijital varlıkları en berrak, dayanıklı ve ölçeklenebilir yapılara dönüştürüyoruz. Şeffaf, güvenli ve insan odaklı ekosistemimiz hakkında bilgi edinin.',
       teaserAboutBtn: 'Hakkımızda Detaylı Bilgi',
       teaserProjectsTitle: 'Projelerimiz',
-      teaserProjectsDesc: 'Katman-1 hibrid blokzincirimiz KristaTech, güvenli köprümüz Velvet Bridge ve yaratıcı Web3 girişimlerimizin yer aldığı geniş teknoloji ekosistemini keşfedin.',
+      teaserProjectsDesc: 'Katman-1 hibrit blokzincirimiz KristaTech (KRISTA) ve çoklu platform cüzdan ekosistemi, Block Explorer, FastChange Exchange ve yaratıcı Web3 girişimlerimizin yer aldığı geniş teknoloji ekosistemini keşfedin.',
       teaserProjectsBtn: 'Ekosistemi Keşfet',
       teaserLabTitle: 'Kristal Laboratuvarı',
       teaserLabDesc: '3D Kristal Tasarımcısını kişiselleştirin veya PoBLS mutabakat loterisi simülatörünü test ederek blokzincir teknolojimizi interaktif olarak deneyimleyin.',
@@ -93,16 +93,16 @@ export const translations: Record<string, any> = {
       desc: 'KristaTech altyapısı üzerinde çalışan, blokzincir deneyimini kolaylaştıran ve zenginleştiren projelerimiz.',
       category: 'Kategori',
       features: 'Özellikler',
-      kristatechDesc: 'Core v1.5.9.0 (Proto 70983) üzerinde çalışan; UPGRADE_FAIRNESS, KTDIP3 deterministik Masternode, 17 tek geçişli algoritma (4.080 3’lü permütasyon), 7+1+3 Dual-Track komiteli ADAM konsensüsü, dinamik BLS12-381 LLMQ, eşit paylaşımlı Model D (%35/%40/%15/%10 + %50 Yakım) ve gaz ücreti bulunmayan MESCAL akıllı sözleşmelerine sahip hibrit Katman-1 blokzincir ağı.',
+      kristatechDesc: 'Core v1.5.9.0 (Proto 70983) üzerinde çalışan; UPGRADE_FAIRNESS, KTDIP3 deterministik Masternode (wallet.dat mnmeta), BIP324 şifreli P2P v2, 17 tek geçişli algoritma (4.080 3’lü permütasyon), 7+1+3 Dual-Track ADAM konsensüsü, dinamik BLS12-381 LLMQ, eşit paylaşımlı Model D (%35/%40/%15/%10 + %50 Yakım), MESCAL v2 Taproot (kt1p...) ve çoklu platform cüzdan ailesine (9 sekmeli Qt Core, Light/PWA, Mobil, Tarayıcı) sahip hibrit Katman-1 blokzincir ağı.',
       activeProjects: 'Aktif Projeler',
       projectsDesc: 'Kendi laboratuvarımızda filizlenen, her biri merkeziyetsiz geleceğe farklı bir perspektif getiren yenilikçi teknoloji girişimlerimiz.',
       kristatech: {
         category: 'Katman-1 Blokzincir • Core v1.5.9.0',
         title: 'KristaTech Coin (KRISTA)',
-        text: 'Core v1.5.9.0 (Proto 70983) üzerinde çalışan; UPGRADE_FAIRNESS, KTDIP3 deterministik Masternode, 17 tek geçişli algoritma (4.080 3’lü permütasyon), 7+1+3 Dual-Track komiteli ADAM konsensüsü, dinamik BLS12-381 LLMQ, eşit paylaşımlı Model D (%35/%40/%15/%10 + %50 Yakım) ve gaz ücreti bulunmayan MESCAL akıllı sözleşmelerine sahip hibrit Katman-1 blokzincir ağı.',
-        feature1: 'ADAM 7+1+3 Dual-Track & KTDIP3 LLMQ (3/5–8/15)',
+        text: 'Core v1.5.9.0 (Proto 70983) üzerinde çalışan; UPGRADE_FAIRNESS, KTDIP3 deterministik Masternode (wallet.dat mnmeta), BIP324 şifreli P2P v2, 17 tek geçişli algoritma (4.080 3’lü permütasyon), 7+1+3 Dual-Track ADAM konsensüsü, dinamik BLS12-381 LLMQ, eşit paylaşımlı Model D (%35/%40/%15/%10 + %50 Yakım), MESCAL v2 Taproot (kt1p...) ve çoklu platform cüzdan ailesine (9 sekmeli Qt Core, Light/PWA, Mobil, Tarayıcı) sahip hibrit Katman-1 blokzincir ağı.',
+        feature1: 'ADAM 7+1+3, KTDIP3 (wallet.dat) & BIP324 P2P',
         feature2: 'Model D (%35 MN / %40 Eşit Komite / %15 Üretici / %10 LLMQ)',
-        feature3: 'MESCAL Gasless VM (250 / 10 / 0 KRISTA Kayıt)',
+        feature3: 'MESCAL v2 Taproot (kt1p...) & Çoklu Cüzdan Ailesi',
         link1: 'KristaTech Coin Ziyaret Et'
       },
       explorer: {
@@ -206,38 +206,38 @@ export const translations: Record<string, any> = {
       },
       tech: {
         mescal: {
-          tagline: 'Gasless, Deterministik Akıllı Sözleşme Sanal Makinesi',
-          desc: 'JSON tabanlı bildirimsel şablonlardan doğrudan yığın tabanlı CScript byte koduna derlenen, döngüsüz (gasless) ve re-entrancy açıklarını tamamen engelleyen deterministik sanal makine (cscript_sandbox). 250 KRISTA Coin-Lock, 10 KRISTA Fonlu PoW-Lock (2.880 blok CLTV, 2.900 blok cüzdan tamponu) ve Blok 2.500+ kalıcı 0 KRISTA Açık PoW kayıtlarını, emanet, vesting (CSV) ve HTLC atomik takaslarını yerleşik olarak destekler.',
+          tagline: 'MESCAL v2 Taproot (kt1p...) & Deterministik CScript',
+          desc: 'JSON/YAML bildirimsel şablonlarından doğrudan BIP-341 Taproot (kt1p... Bech32m) ve yığın tabanlı CScript byte koduna derlenen (CMescal), döngüsüz ve re-entrancy korumalı akıllı sözleşme mimarisi. Cüzdan içi görsel tasarımcı ve BIP174 PSBT ile 250 KRISTA Coin-Lock, 10 KRISTA Fonlu PoW-Lock (2.880 blok CLTV + 20 blok tampon), Blok 2.500+ kalıcı 0 KRISTA Açık PoW, M-of-N kasa, zaman kilidi, vesting (CSV) ve HTLC takaslarını yerleşik olarak destekler.',
           spec1Name: 'Kilit & Kayıt Protokolü',
-          spec1Val: '250 Coin-Lock / 10 Funded PoW-Lock (2.880 CLTV) / 0 Open PoW',
+          spec1Val: '250 Coin-Lock / 10 Funded PoW (2.880 CLTV) / 0 Open PoW',
           spec2Name: 'Desteklenen Şablonlar',
-          spec2Val: 'Çoklu Emanet, Vesting (CSV) & HTLC Atomik Takas',
-          spec3Name: 'Yürütme Mimarisi',
-          spec3Val: 'Sıfır Gaz Ücretli CScript Sandbox VM'
+          spec2Val: 'Time-Lock, M-of-N Kasa, Vesting (CSV) & HTLC Takas',
+          spec3Name: 'Yürütme & İmza Mimarisi',
+          spec3Val: 'Taproot (kt1p... Bech32m) • CScript (CMescal) • BIP174 PSBT'
         },
         adam: {
-          tagline: '7+1+3 Dual-Track Doğrulayıcı & 17 Algoritmalı Adil VRF',
-          desc: 'Her blok turunda 11 doğrulayıcıdan oluşan 7+1+3 Dual-Track komitesini (7 Masternode, 1 izole 250 KRISTA Coin-Lock, 2 Fonlu 10 KRISTA PoW-Lock ve 1 kalıcı 0 KRISTA Açık PoW) ve 4.200:250:10 adil karekök VRF ile (en az %75 MN tabanlı) 1 koordinatörü seçen kooperatif konsensüs katmanı. 17 tek geçişli algoritma ve 4.080 3’lü permütasyon kullanır.',
+          tagline: '7+1+3 Dual-Track Komite & 17 Algoritmalı Orantılı VRF',
+          desc: 'Her blok turunda 11 doğrulayıcıdan oluşan 7+1+3 Dual-Track komitesini (7 Masternode, 1 izole 250 KRISTA Coin-Lock, 2 Fonlu 10 KRISTA PoW-Lock ve 1 kalıcı 0 KRISTA Açık PoW) ve 4.200:250:10 orantılı teminat ağırlıklı VRF (ADAM_FAIR_COORD_V4, en az %75 MN tabanı) ile 1 koordinatörü seçen kooperatif konsensüs katmanı. 17 tek geçişli algoritma ve 4.080 3’lü permütasyon kullanır.',
           spec1Name: 'Doğrulayıcı Komitesi',
           spec1Val: '7+1+3 Dual-Track (7 MN + 1 Coin-Lock + 2 Funded + 1 Open PoW)',
           spec2Name: 'Bulmaca & ASIC Direnci',
           spec2Val: '17 Tek Geçişli Algoritma + 4.080 3’lü Permütasyon VRF',
           spec3Name: 'Koordinatör Seçimi',
-          spec3Val: '4.200:250:10 Adil Karekök VRF (≥%75 MN Tabanı)'
+          spec3Val: '4.200:250:10 Orantılı Teminat VRF (≥%75 MN Tabanı)'
         },
         pobls: {
-          tagline: 'KTDIP3 BLS12-381 Eşik İmzalı Kriptografik Blok Loterisi',
-          desc: 'supranational/blst kütüphanesi üzerinde KTDIP3 BLS12-381 operatör anahtarlarını kullanan kesinlik katmanı. Blok 4.800’de 4.080’li PoMBL v12 permütasyonu, Blok 5.000 itibarıyla da 3/5–8/15 dinamik LLMQ yeter sayısı (yalnızca imzacıya 1 blok gecikmeli %10 ödül) ve XOR mesafe loterisi devreye girer.',
+          tagline: 'KTDIP3 BLS12-381 LLMQ Kesinlik & BIP324 Güvenlik Katmanı',
+          desc: 'supranational/blst üzerinde KTDIP3 deterministik operatör anahtarlarını (wallet.dat mnmeta ile masternode.conf emekli) ve BIP324 şifreli P2P v2 ağını kullanan kesinlik katmanı. Blok 4.800’de 4.080’li PoMBL v12 permütasyonu, Blok 5.000 itibarıyla da 3/5–8/15 dinamik LLMQ yeter sayısı (yalnızca imzacıya 1 blok gecikmeli %10 ödül, -5/+5 PoSe) ve XOR mesafe loterisi devreye girer.',
           spec1Name: 'Kriptografik Motor',
-          spec1Val: 'supranational/blst (KTDIP3 BLS12-381 + secp256k1)',
+          spec1Val: 'supranational/blst (KTDIP3 BLS12-381) • BIP324 P2P v2',
           spec2Name: 'Quorum & Eşik Yapısı',
-          spec2Val: '3/5–8/15 Dinamik LLMQ (Yalnızca İmzacı %10 Ödül)',
+          spec2Val: '3/5–8/15 Dinamik LLMQ (Yalnızca İmzacı %10 • -5/+5 PoSe)',
           spec3Name: 'Aktivasyon & Seçim',
           spec3Val: 'PoMBL v12 (Blok 4.800) • Model D LLMQ (Blok 5.000)'
         },
         modelD: {
           tagline: 'Sıfır Premine & Eşit Paylaşımlı Model D (%93 Net Havuz)',
-          desc: '210M KRISTA üst sınırına ve 0 Premine ilkesine sahip ekonomik model (Blok 2 itibarıyla 17 KRISTA ve her 259.200 blokta -%2,15 azalma). %7 Geliştirici Hazinesi sonrası %93 net havuz Blok 5.000+ itibarıyla %35 Pasif MN, %40 Eşit Komite (%40/11 = ~%3,64/koltuk: %25,45 MN + %3,64 Coin-Lock + %10,91 PoW), %15 Üretici (%12 PoS [PoM 1.25x, PoL 3x, PoB 6x] + %3 Koord.) ve %10 LLMQ arasında bölüşülür; sahipsiz koltukların %50’si yakılır.',
+          desc: '210M KRISTA üst sınırına (~204,95M asimptot) ve 0 Premine ilkesine sahip ekonomik model (Blok 2 itibarıyla 17 KRISTA ve her 259.200 blokta -%2,15 azalma). %7 LLMQ yönetimli Geliştirici Hazinesi sonrası %93 net havuz Blok 5.000+ itibarıyla %35 Pasif MN, %40 Eşit Komite (%40/11 = ~%3,64/koltuk), %15 Üretici (PoS’ta %12 Staker [600 blok olgunluk; PoM 1.25x, PoL 3x, PoB 6x] + %3 Koord. + %100 işlem ücreti) ve %10 LLMQ arasında bölüşülür; sahipsiz koltuklar %50 Yakım / %50 Hazine olarak dağıtılır.',
           spec1Name: 'Arz & Net Ödül Havuzu',
           spec1Val: '210M KRISTA (0 Premine) • %93 Net / %7 Hazine',
           spec2Name: 'Model D Dağılımı (Blok 5.000+)',
@@ -308,15 +308,15 @@ export const translations: Record<string, any> = {
       viewTechBtn: 'Review Details',
       adam: {
         title: 'ADAM Consensus (7+1+3 Dual-Track)',
-        desc: 'Consensus model utilizing Verifiable Random Functions (VRF) and rolling-seed mechanism. Selects an 11-validator 7+1+3 Dual-Track committee (7 Masternodes, 1 isolated 250 KRISTA Coin-Lock, 2 Funded 10 KRISTA PoW-Lock, and 1 permanent 0 KRISTA Open PoW) plus 1 coordinator via 4,200:250:10 Fair Quadratic VRF (≥75% MN floor); uses 17 uniform single-pass algorithms and 4,080 3-permutations (X11KVS reserved for PoW Registration).'
+        desc: 'Consensus model utilizing Verifiable Random Functions (VRF) and rolling-seed mechanism. Selects an 11-validator 7+1+3 Dual-Track committee (7 Masternodes, 1 isolated 250 KRISTA Coin-Lock, 2 Funded 10 KRISTA PoW-Lock, and 1 permanent 0 KRISTA Open PoW) plus 1 coordinator via 4,200:250:10 Proportional Capital VRF (ADAM_FAIR_COORD_V4, ≥75% MN floor); uses 17 uniform single-pass algorithms and 4,080 3-permutations (X11KVS reserved for PoW Registration).'
       },
       pobls: {
         title: 'Proof of BLS (PoBLS)',
-        desc: 'Cryptographic finality and threshold signature layer powered by supranational/blst and KTDIP3 deterministic operator keys. PoMBL v12 (4,080 permutations) activates at Block 4,800, followed by dynamic 3-of-5 to 8-of-15 BLS12-381 LLMQ quorums (signer-only 10% reward, 1-block lag) at Block 5,000.'
+        desc: 'Cryptographic finality layer powered by supranational/blst, KTDIP3 deterministic operator keys (wallet.dat mnmeta, retiring masternode.conf), and BIP324 encrypted P2P v2 transport. PoMBL v12 (4,080 permutations) activates at Block 4,800, followed by dynamic 3-of-5 to 8-of-15 BLS12-381 LLMQ quorums (signer-only 10% reward, 1-block lag, -5/+5 PoSe) at Block 5,000.'
       },
       mescal: {
         title: 'MESCAL Contracts',
-        desc: 'Gas-free deterministic visual smart contract VM (cscript_sandbox) for predictable digital agreements. Directly supports native 250 KRISTA Coin-Lock and 10 KRISTA PoW-Lock (2,880-block CLTV, 2,900-block wallet buffer) registrations, Block 2,500+ permanent 0 KRISTA Open-Entry PoW, escrow, linear vesting (CSV), and HTLC swaps.'
+        desc: 'Deterministic MESCAL v2 Taproot (kt1p... Bech32m) and CScript (CMescal) smart contract engine with predictable byte-sized fees and zero gas wars. Powered by the in-wallet JSON/YAML visual designer and BIP174 PSBT, natively supporting 250 KRISTA Coin-Lock, 10 KRISTA Funded PoW-Lock (2,880-block CLTV + 20-block wallet buffer), Block 2,500+ permanent 0 KRISTA Open-Entry PoW, M-of-N vaults, time-locks, vesting (CSV), and HTLC swaps.'
       },
       heroBadge: 'Shaping the Tomorrows',
       heroTitleStart: 'Building the Technological',
@@ -332,7 +332,7 @@ export const translations: Record<string, any> = {
       teaserAboutDesc: 'We transform ideas and digital assets into the clearest, most durable, and scalable structures. Learn about our transparent, secure, and human-centric ecosystem.',
       teaserAboutBtn: 'Detailed Info About Us',
       teaserProjectsTitle: 'Our Projects',
-      teaserProjectsDesc: 'Explore our vast tech ecosystem featuring our Layer-1 hybrid blockchain KristaTech, our secure bridge Velvet Bridge, and creative Web3 initiatives.',
+      teaserProjectsDesc: 'Explore our vast tech ecosystem featuring our Layer-1 hybrid blockchain KristaTech (KRISTA) & multi-platform wallet suite, Block Explorer, FastChange Exchange, and creative Web3 initiatives.',
       teaserProjectsBtn: 'Explore the Ecosystem',
       teaserLabTitle: 'Kristal Laboratory',
       teaserLabDesc: 'Personalize the 3D Crystal Designer or test the PoBLS consensus lottery simulator to interactively experience our blockchain technology.',
@@ -368,16 +368,16 @@ export const translations: Record<string, any> = {
       desc: 'Our projects working on the KristaTech infrastructure that simplify and enrich the blockchain experience.',
       category: 'Category',
       features: 'Features',
-      kristatechDesc: 'Powered by Core v1.5.9.0 (Proto 70983), a hybrid Layer-1 blockchain network featuring UPGRADE_FAIRNESS, KTDIP3 deterministic Masternodes, 17 uniform algorithms (4,080 3-permutations) & 7+1+3 Dual-Track ADAM consensus, dynamic BLS12-381 LLMQs, Equal-Pay Model D (35%/40%/15%/10% + 50% Burn), and gas-free MESCAL smart contracts.',
+      kristatechDesc: 'Powered by Core v1.5.9.0 (Proto 70983), a hybrid Layer-1 blockchain network featuring UPGRADE_FAIRNESS, KTDIP3 deterministic Masternodes (wallet.dat mnmeta), BIP324 encrypted P2P v2, 17 uniform algorithms (4,080 3-permutations) & 7+1+3 Dual-Track ADAM consensus, dynamic BLS12-381 LLMQs, Equal-Pay Model D (35%/40%/15%/10% + 50% Burn), MESCAL v2 Taproot (kt1p...), and a multi-platform wallet suite (9-tab Qt Core, Light/PWA, Mobile, Browser).',
       activeProjects: 'Active Projects',
       projectsDesc: 'Our innovative technology ventures sprouting in our own laboratory, each bringing a different perspective to the decentralized future.',
       kristatech: {
         category: 'Layer-1 Blockchain • Core v1.5.9.0',
         title: 'KristaTech Coin (KRISTA)',
-        text: 'Powered by Core v1.5.9.0 (Proto 70983), a hybrid Layer-1 blockchain network featuring UPGRADE_FAIRNESS, KTDIP3 deterministic Masternodes, 17 uniform algorithms (4,080 3-permutations) & 7+1+3 Dual-Track ADAM consensus, dynamic BLS12-381 LLMQs, Equal-Pay Model D (35%/40%/15%/10% + 50% Burn), and gas-free MESCAL smart contracts.',
-        feature1: 'ADAM 7+1+3 Dual-Track & KTDIP3 LLMQ (3/5–8/15)',
+        text: 'Powered by Core v1.5.9.0 (Proto 70983), a hybrid Layer-1 blockchain network featuring UPGRADE_FAIRNESS, KTDIP3 deterministic Masternodes (wallet.dat mnmeta), BIP324 encrypted P2P v2, 17 uniform algorithms (4,080 3-permutations) & 7+1+3 Dual-Track ADAM consensus, dynamic BLS12-381 LLMQs, Equal-Pay Model D (35%/40%/15%/10% + 50% Burn), MESCAL v2 Taproot (kt1p...), and a multi-platform wallet suite (9-tab Qt Core, Light/PWA, Mobile, Browser).',
+        feature1: 'ADAM 7+1+3, KTDIP3 (wallet.dat) & BIP324 P2P',
         feature2: 'Model D (35% MN / 40% Equal Committee / 15% Producer / 10% LLMQ)',
-        feature3: 'MESCAL Gasless VM (250 / 10 / 0 KRISTA Registration)',
+        feature3: 'MESCAL v2 Taproot (kt1p...) & Multi-Wallet Suite',
         link1: 'Visit KristaTech Coin'
       },
       explorer: {
@@ -481,38 +481,38 @@ export const translations: Record<string, any> = {
       },
       tech: {
         mescal: {
-          tagline: 'Gasless, Deterministic Smart Contract Virtual Machine',
-          desc: 'A deterministic, loop-free (gasless) declarative smart contract VM (cscript_sandbox) compiling JSON templates directly to stack-based CScript bytecode while preventing re-entrancy vulnerabilities. Natively supports 250 KRISTA Coin-Lock, 10 KRISTA Funded PoW-Lock (2,880-block CLTV, 2,900-block wallet buffer), Block 2,500+ permanent 0 KRISTA Open PoW, escrow, linear vesting (CSV), and HTLC swaps.',
+          tagline: 'MESCAL v2 Taproot (kt1p...) & Deterministic CScript',
+          desc: 'Deterministic, loop-free declarative smart contract architecture (CMescal) compiling JSON/YAML templates directly to BIP-341 Taproot (kt1p... Bech32m) and stack-based CScript bytecode while preventing re-entrancy vulnerabilities. Via the in-wallet visual designer and BIP174 PSBT, natively supports 250 KRISTA Coin-Lock, 10 KRISTA Funded PoW-Lock (2,880-block CLTV + 20-block buffer), Block 2,500+ permanent 0 KRISTA Open PoW, M-of-N vaults, time-locks, vesting (CSV), and HTLC swaps.',
           spec1Name: 'Lock & Registration Protocol',
-          spec1Val: '250 Coin-Lock / 10 Funded PoW-Lock (2,880 CLTV) / 0 Open PoW',
+          spec1Val: '250 Coin-Lock / 10 Funded PoW (2,880 CLTV) / 0 Open PoW',
           spec2Name: 'Supported Templates',
-          spec2Val: 'Multi-Party Escrow, Vesting (CSV) & HTLC Atomic Swap',
-          spec3Name: 'Execution Architecture',
-          spec3Val: 'Zero-Gas CScript Sandbox VM'
+          spec2Val: 'Time-Lock, M-of-N Vault, Vesting (CSV) & HTLC Swap',
+          spec3Name: 'Execution & Signing Stack',
+          spec3Val: 'Taproot (kt1p... Bech32m) • CScript (CMescal) • BIP174 PSBT'
         },
         adam: {
-          tagline: '7+1+3 Dual-Track Validator & 17-Algorithm Fair VRF',
-          desc: 'Cooperative consensus layer electing an 11-validator 7+1+3 Dual-Track committee (7 Masternodes, 1 isolated 250 KRISTA Coin-Lock, 2 Funded 10 KRISTA PoW-Lock, and 1 permanent 0 KRISTA Open PoW) plus 1 coordinator via 4,200:250:10 Fair VRF (≥75% MN floor). Uses 17 uniform single-pass algorithms and 4,080 3-permutations.',
+          tagline: '7+1+3 Dual-Track Committee & 17-Algorithm Proportional VRF',
+          desc: 'Cooperative consensus layer electing an 11-validator 7+1+3 Dual-Track committee (7 Masternodes, 1 isolated 250 KRISTA Coin-Lock, 2 Funded 10 KRISTA PoW-Lock, and 1 permanent 0 KRISTA Open PoW) plus 1 coordinator via 4,200:250:10 Proportional Capital VRF (ADAM_FAIR_COORD_V4, ≥75% MN floor). Uses 17 uniform single-pass algorithms and 4,080 3-permutations.',
           spec1Name: 'Validator Committee',
           spec1Val: '7+1+3 Dual-Track (7 MN + 1 Coin-Lock + 2 Funded + 1 Open PoW)',
           spec2Name: 'Puzzle & ASIC Resistance',
           spec2Val: '17 Uniform Algorithms + 4,080 3-Permutation VRF',
           spec3Name: 'Coordinator Election',
-          spec3Val: '4,200:250:10 Fair Quadratic VRF (≥75% MN Floor)'
+          spec3Val: '4,200:250:10 Proportional Capital VRF (≥75% MN Floor)'
         },
         pobls: {
-          tagline: 'KTDIP3 BLS12-381 Threshold Cryptographic Block Lottery',
-          desc: 'Cryptographic finality layer powered by supranational/blst and KTDIP3 BLS12-381 operator keys. PoMBL v12 (4,080 permutations) activates at Block 4,800, followed at Block 5,000 by dynamic 3-of-5 to 8-of-15 LLMQ threshold finality (signer-only 10% reward, 1-block lag) and XOR distance selection.',
+          tagline: 'KTDIP3 BLS12-381 LLMQ Finality & BIP324 Security Layer',
+          desc: 'Cryptographic finality layer powered by supranational/blst, KTDIP3 deterministic operator keys (wallet.dat mnmeta, retiring masternode.conf), and BIP324 encrypted P2P v2 transport. PoMBL v12 (4,080 permutations) activates at Block 4,800, followed at Block 5,000 by dynamic 3-of-5 to 8-of-15 LLMQ threshold finality (signer-only 10% reward, 1-block lag, -5/+5 PoSe) and XOR distance selection.',
           spec1Name: 'Cryptographic Engine',
-          spec1Val: 'supranational/blst (KTDIP3 BLS12-381 + secp256k1)',
+          spec1Val: 'supranational/blst (KTDIP3 BLS12-381) • BIP324 P2P v2',
           spec2Name: 'Quorum & Threshold Model',
-          spec2Val: '3/5–8/15 Dynamic LLMQ (Signer-Only 10% Share)',
+          spec2Val: '3/5–8/15 Dynamic LLMQ (Signer-Only 10% • -5/+5 PoSe)',
           spec3Name: 'Activation & Selection',
           spec3Val: 'PoMBL v12 (Block 4,800) • Model D LLMQ (Block 5,000)'
         },
         modelD: {
           tagline: 'Zero Premine & Equal-Pay Model D (93% Net Pool)',
-          desc: 'Economic model with a 210M KRISTA hard cap, 0 Premine, 17 KRISTA Block 2+ emission, and -2.15% decay per 259,200 blocks. After the 7% Developer Treasury, the 93% net pool from Block 5,000+ splits 35% Passive MN, 40% Equal-Pay Committee (40%/11 = ~3.64%/seat: 25.45% MN + 3.64% Coin-Lock + 10.91% PoW), 15% Producer (12% Staker [PoM 1.25x, PoL 3x, PoB 6x] + 3% Coord), and 10% LLMQ; unclaimed seats split 50% Burn / 50% Treasury.',
+          desc: 'Economic model with a 210M KRISTA hard cap (~204.95M asymptote), 0 Premine, 17 KRISTA Block 2+ emission, and -2.15% decay per 259,200 blocks. After the 7% LLMQ-governed Developer Treasury, the 93% net pool from Block 5,000+ splits 35% Passive MN, 40% Equal-Pay Committee (40%/11 = ~3.64%/seat), 15% Producer (in PoS: 12% Staker [600-block maturity; PoM 1.25x, PoL 3x, PoB 6x] + 3% Coord + 100% tx fees), and 10% LLMQ; unclaimed shares split 50% Burn / 50% Treasury.',
           spec1Name: 'Supply & Net Reward Pool',
           spec1Val: '210M KRISTA (0 Premine) • 93% Net / 7% Treasury',
           spec2Name: 'Model D Split (Block 5,000+)',

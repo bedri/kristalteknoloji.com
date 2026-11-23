@@ -21,7 +21,8 @@ const projects = computed(() => [
       t('ecosystem.kristatech.feature3')
     ],
     links: [
-      { label: t('ecosystem.kristatech.link1'), href: 'https://krista.kristalteknoloji.com', target: true }
+      { label: t('ecosystem.kristatech.link1'), href: 'https://krista.kristalteknoloji.com', target: true },
+      { label: t('common.downloadWallet'), href: 'https://github.com/bedri/KristaTech-KRISTA/releases', target: true }
     ]
   },
   {
