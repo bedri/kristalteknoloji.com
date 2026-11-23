@@ -106,6 +106,16 @@ const { locale } = useLocale()
                 Whitepaper
               </a>
             </li>
+            <li>
+              <a
+                href="https://explorer.kristalteknoloji.com/api-docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-[#52565b] dark:text-[#9ea2a8] hover:text-[#00bed6] transition-colors duration-200"
+              >
+                Explorer API v2.1 (OpenAPI)
+              </a>
+            </li>
           </ul>
         </div>
 

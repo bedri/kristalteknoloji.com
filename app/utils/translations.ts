@@ -57,7 +57,7 @@ export const translations: Record<string, any> = {
       teaserAboutDesc: 'Fikirleri ve dijital varlıkları en berrak, dayanıklı ve ölçeklenebilir yapılara dönüştürüyoruz. Şeffaf, güvenli ve insan odaklı ekosistemimiz hakkında bilgi edinin.',
       teaserAboutBtn: 'Hakkımızda Detaylı Bilgi',
       teaserProjectsTitle: 'Projelerimiz',
-      teaserProjectsDesc: 'Katman-1 hibrit blokzincirimiz KristaTech (KRISTA) ve çoklu platform cüzdan ekosistemi, Block Explorer, FastChange Exchange ve yaratıcı Web3 girişimlerimizin yer aldığı geniş teknoloji ekosistemini keşfedin.',
+      teaserProjectsDesc: 'Katman-1 hibrit blokzincirimiz KristaTech (KRISTA), SPV/Electrum 1.4 çoklu cüzdan ekosistemi, Block Explorer v2.1 (OpenAPI & SSE), FastChange Exchange ve yaratıcı Web3 girişimlerimizin yer aldığı geniş teknoloji ekosistemini keşfedin.',
       teaserProjectsBtn: 'Ekosistemi Keşfet',
       teaserLabTitle: 'Kristal Laboratuvarı',
       teaserLabDesc: '3D Kristal Tasarımcısını kişiselleştirin veya PoBLS mutabakat loterisi simülatörünü test ederek blokzincir teknolojimizi interaktif olarak deneyimleyin.',
@@ -93,26 +93,27 @@ export const translations: Record<string, any> = {
       desc: 'KristaTech altyapısı üzerinde çalışan, blokzincir deneyimini kolaylaştıran ve zenginleştiren projelerimiz.',
       category: 'Kategori',
       features: 'Özellikler',
-      kristatechDesc: 'Core v1.5.9.0 (Proto 70983) üzerinde çalışan; UPGRADE_FAIRNESS, KTDIP3 deterministik Masternode (wallet.dat mnmeta), BIP324 şifreli P2P v2, 17 tek geçişli algoritma (4.080 3’lü permütasyon), 7+1+3 Dual-Track ADAM konsensüsü, dinamik BLS12-381 LLMQ, eşit paylaşımlı Model D (%35/%40/%15/%10 + %50 Yakım), MESCAL v2 Taproot (kt1p...) ve çoklu platform cüzdan ailesine (9 sekmeli Qt Core, Light/PWA, Mobil, Tarayıcı) sahip hibrit Katman-1 blokzincir ağı.',
+      kristatechDesc: 'Core v1.5.9.0 (Proto 70983) üzerinde çalışan; UPGRADE_FAIRNESS, KTDIP3 deterministik Masternode (wallet.dat mnmeta), BIP324 şifreli P2P v2, 17 tek geçişli algoritma (4.080 3’lü permütasyon), 7+1+3 Dual-Track ADAM konsensüsü, dinamik BLS12-381 LLMQ, eşit paylaşımlı Model D (%35/%40/%15/%10 + %50 Yakım) ve MESCAL v2 Taproot (kt1p...) altyapısını; 9 sekmeli Qt Core, @kristatech/sdk (17 dil), Electrum 1.4 SPV (Lite PWA, Mobil Capacitor, window.krista MV3 Tarayıcı Cüzdanı), MESCAL Web Studio, Treasury Portal ve Miner Manager ekosistemiyle birleştiren hibrit Katman-1 ağı.',
       activeProjects: 'Aktif Projeler',
       projectsDesc: 'Kendi laboratuvarımızda filizlenen, her biri merkeziyetsiz geleceğe farklı bir perspektif getiren yenilikçi teknoloji girişimlerimiz.',
       kristatech: {
         category: 'Katman-1 Blokzincir • Core v1.5.9.0',
         title: 'KristaTech Coin (KRISTA)',
-        text: 'Core v1.5.9.0 (Proto 70983) üzerinde çalışan; UPGRADE_FAIRNESS, KTDIP3 deterministik Masternode (wallet.dat mnmeta), BIP324 şifreli P2P v2, 17 tek geçişli algoritma (4.080 3’lü permütasyon), 7+1+3 Dual-Track ADAM konsensüsü, dinamik BLS12-381 LLMQ, eşit paylaşımlı Model D (%35/%40/%15/%10 + %50 Yakım), MESCAL v2 Taproot (kt1p...) ve çoklu platform cüzdan ailesine (9 sekmeli Qt Core, Light/PWA, Mobil, Tarayıcı) sahip hibrit Katman-1 blokzincir ağı.',
+        text: 'Core v1.5.9.0 (Proto 70983) üzerinde çalışan; UPGRADE_FAIRNESS, KTDIP3 deterministik Masternode (wallet.dat mnmeta), BIP324 şifreli P2P v2, 17 tek geçişli algoritma (4.080 3’lü permütasyon), 7+1+3 Dual-Track ADAM konsensüsü, dinamik BLS12-381 LLMQ, eşit paylaşımlı Model D (%35/%40/%15/%10 + %50 Yakım) ve MESCAL v2 Taproot (kt1p...) altyapısını; 9 sekmeli Qt Core, @kristatech/sdk (17 dil), Electrum 1.4 SPV (Lite PWA, Mobil Capacitor, window.krista MV3 Tarayıcı Cüzdanı), MESCAL Web Studio, Treasury Portal ve Miner Manager ekosistemiyle birleştiren hibrit Katman-1 ağı.',
         feature1: 'ADAM 7+1+3, KTDIP3 (wallet.dat) & BIP324 P2P',
         feature2: 'Model D (%35 MN / %40 Eşit Komite / %15 Üretici / %10 LLMQ)',
-        feature3: 'MESCAL v2 Taproot (kt1p...) & Çoklu Cüzdan Ailesi',
+        feature3: 'MESCAL v2 Taproot (kt1p...) & Electrum 1.4 SPV Cüzdanlar',
         link1: 'KristaTech Coin Ziyaret Et'
       },
       explorer: {
-        category: 'Blokzincir Kaşifi & Analitik v2.0',
+        category: 'Blokzincir Kaşifi & REST/SSE API v2.1',
         title: 'KristaTech Block Explorer',
-        text: 'KristaTech ağındaki tüm blokları, transferleri, MESCAL akıllı sözleşmelerini, Model D ödül dağılımlarını, %50 sahipsiz koltuk yakımlarını (burn) ve 7+1+3 doğrulayıcı düğüm metriklerini gerçek zamanlı izlemenizi sağlayan Explorer v2.0 arayüzü.',
-        feature1: 'Anlık Blok, İşlem & Bech32m Taproot Takibi',
-        feature2: 'Model D, Yakım (Burn) & 7+1+3 Havuz Metrikleri',
-        feature3: 'MESCAL Akıllı Sözleşme & PoBLS Doğrulama',
-        link1: 'Kaşifi Başlat'
+        text: 'KristaTech ağındaki tüm blokları, transferleri, MESCAL v2 Taproot akıllı sözleşmelerini, Model D ödül dağılımlarını, %50 sahipsiz koltuk yakımlarını (burn) ve 7+1+3 doğrulayıcı analitiğini gerçek zamanlı izlemenizi sağlayan; OpenAPI spesifikasyonlu, SSE canlı akışlı ve cüzdan/borsa uç noktalı Explorer v2.1 arayüzü.',
+        feature1: 'REST & SSE API v2.1 (OpenAPI) + Canlı Akış',
+        feature2: 'Model D, Yakım (Burn) & 7+1+3 Doğrulayıcı Analitiği',
+        feature3: 'Bech32m Taproot (kt1p...), Cüzdan/Borsa & Kontrat API',
+        link1: 'Kaşifi Başlat',
+        link2: 'API Dokümantasyonu (v2.1)'
       },
       velvet: {
         category: 'Kreatif Web3 Oyun',
@@ -207,7 +208,7 @@ export const translations: Record<string, any> = {
       tech: {
         mescal: {
           tagline: 'MESCAL v2 Taproot (kt1p...) & Deterministik CScript',
-          desc: 'JSON/YAML bildirimsel şablonlarından doğrudan BIP-341 Taproot (kt1p... Bech32m) ve yığın tabanlı CScript byte koduna derlenen (CMescal), döngüsüz ve re-entrancy korumalı akıllı sözleşme mimarisi. Cüzdan içi görsel tasarımcı ve BIP174 PSBT ile 250 KRISTA Coin-Lock, 10 KRISTA Fonlu PoW-Lock (2.880 blok CLTV + 20 blok tampon), Blok 2.500+ kalıcı 0 KRISTA Açık PoW, M-of-N kasa, zaman kilidi, vesting (CSV) ve HTLC takaslarını yerleşik olarak destekler.',
+          desc: 'JSON/YAML bildirimsel şablonlarından doğrudan BIP-341 Taproot (kt1p... Bech32m) ve yığın tabanlı CScript byte koduna derlenen (CMescal), döngüsüz ve re-entrancy korumalı akıllı sözleşme mimarisi. Cüzdan içi görsel tasarımcı, MESCAL Web Studio (20+ kurumsal/kişisel şablon), @kristatech/sdk ve BIP174 PSBT ile 250 KRISTA Coin-Lock, 10 KRISTA Fonlu PoW-Lock (2.880 blok CLTV + 20 blok tampon), Blok 2.500+ kalıcı 0 KRISTA Açık PoW, M-of-N kasa, zaman kilidi, vesting (CSV) ve HTLC takaslarını yerleşik olarak destekler.',
           spec1Name: 'Kilit & Kayıt Protokolü',
           spec1Val: '250 Coin-Lock / 10 Funded PoW (2.880 CLTV) / 0 Open PoW',
           spec2Name: 'Desteklenen Şablonlar',
@@ -332,7 +333,7 @@ export const translations: Record<string, any> = {
       teaserAboutDesc: 'We transform ideas and digital assets into the clearest, most durable, and scalable structures. Learn about our transparent, secure, and human-centric ecosystem.',
       teaserAboutBtn: 'Detailed Info About Us',
       teaserProjectsTitle: 'Our Projects',
-      teaserProjectsDesc: 'Explore our vast tech ecosystem featuring our Layer-1 hybrid blockchain KristaTech (KRISTA) & multi-platform wallet suite, Block Explorer, FastChange Exchange, and creative Web3 initiatives.',
+      teaserProjectsDesc: 'Explore our vast tech ecosystem featuring our Layer-1 hybrid blockchain KristaTech (KRISTA), SPV/Electrum 1.4 multi-wallet suite, Block Explorer v2.1 (OpenAPI & SSE), FastChange Exchange, and creative Web3 initiatives.',
       teaserProjectsBtn: 'Explore the Ecosystem',
       teaserLabTitle: 'Kristal Laboratory',
       teaserLabDesc: 'Personalize the 3D Crystal Designer or test the PoBLS consensus lottery simulator to interactively experience our blockchain technology.',
@@ -368,26 +369,27 @@ export const translations: Record<string, any> = {
       desc: 'Our projects working on the KristaTech infrastructure that simplify and enrich the blockchain experience.',
       category: 'Category',
       features: 'Features',
-      kristatechDesc: 'Powered by Core v1.5.9.0 (Proto 70983), a hybrid Layer-1 blockchain network featuring UPGRADE_FAIRNESS, KTDIP3 deterministic Masternodes (wallet.dat mnmeta), BIP324 encrypted P2P v2, 17 uniform algorithms (4,080 3-permutations) & 7+1+3 Dual-Track ADAM consensus, dynamic BLS12-381 LLMQs, Equal-Pay Model D (35%/40%/15%/10% + 50% Burn), MESCAL v2 Taproot (kt1p...), and a multi-platform wallet suite (9-tab Qt Core, Light/PWA, Mobile, Browser).',
+      kristatechDesc: 'Powered by Core v1.5.9.0 (Proto 70983), a hybrid Layer-1 blockchain network combining UPGRADE_FAIRNESS, KTDIP3 deterministic Masternodes (wallet.dat mnmeta), BIP324 encrypted P2P v2, 17 uniform algorithms (4,080 3-permutations) & 7+1+3 Dual-Track ADAM consensus, dynamic BLS12-381 LLMQs, Equal-Pay Model D (35%/40%/15%/10% + 50% Burn), and MESCAL v2 Taproot (kt1p...) with a complete client stack: 9-tab Qt Core, @kristatech/sdk (17 languages), Electrum 1.4 SPV wallets (Lite PWA, Mobile Capacitor, window.krista MV3 Browser Extension), MESCAL Web Studio, Treasury Portal, and Miner Manager.',
       activeProjects: 'Active Projects',
       projectsDesc: 'Our innovative technology ventures sprouting in our own laboratory, each bringing a different perspective to the decentralized future.',
       kristatech: {
         category: 'Layer-1 Blockchain • Core v1.5.9.0',
         title: 'KristaTech Coin (KRISTA)',
-        text: 'Powered by Core v1.5.9.0 (Proto 70983), a hybrid Layer-1 blockchain network featuring UPGRADE_FAIRNESS, KTDIP3 deterministic Masternodes (wallet.dat mnmeta), BIP324 encrypted P2P v2, 17 uniform algorithms (4,080 3-permutations) & 7+1+3 Dual-Track ADAM consensus, dynamic BLS12-381 LLMQs, Equal-Pay Model D (35%/40%/15%/10% + 50% Burn), MESCAL v2 Taproot (kt1p...), and a multi-platform wallet suite (9-tab Qt Core, Light/PWA, Mobile, Browser).',
+        text: 'Powered by Core v1.5.9.0 (Proto 70983), a hybrid Layer-1 blockchain network combining UPGRADE_FAIRNESS, KTDIP3 deterministic Masternodes (wallet.dat mnmeta), BIP324 encrypted P2P v2, 17 uniform algorithms (4,080 3-permutations) & 7+1+3 Dual-Track ADAM consensus, dynamic BLS12-381 LLMQs, Equal-Pay Model D (35%/40%/15%/10% + 50% Burn), and MESCAL v2 Taproot (kt1p...) with a complete client stack: 9-tab Qt Core, @kristatech/sdk (17 languages), Electrum 1.4 SPV wallets (Lite PWA, Mobile Capacitor, window.krista MV3 Browser Extension), MESCAL Web Studio, Treasury Portal, and Miner Manager.',
         feature1: 'ADAM 7+1+3, KTDIP3 (wallet.dat) & BIP324 P2P',
         feature2: 'Model D (35% MN / 40% Equal Committee / 15% Producer / 10% LLMQ)',
-        feature3: 'MESCAL v2 Taproot (kt1p...) & Multi-Wallet Suite',
+        feature3: 'MESCAL v2 Taproot (kt1p...) & Electrum 1.4 SPV Wallets',
         link1: 'Visit KristaTech Coin'
       },
       explorer: {
-        category: 'Blockchain Explorer & Analytics v2.0',
+        category: 'Blockchain Explorer & REST/SSE API v2.1',
         title: 'KristaTech Block Explorer',
-        text: 'Explorer v2.0 interface allowing you to monitor all blocks, transfers, MESCAL smart contracts, Model D reward splits, 50% unclaimed-seat burns, and 7+1+3 validator node metrics on the KristaTech network in real-time.',
-        feature1: 'Instant Block, Tx & Bech32m Taproot Tracking',
-        feature2: 'Model D, Burn & 7+1+3 Pool Metrics',
-        feature3: 'MESCAL Smart Contract & PoBLS Verification',
-        link1: 'Launch Explorer'
+        text: 'Explorer v2.1 interface featuring an OpenAPI-documented REST & SSE API, live event streaming, wallet/exchange & contract endpoints, real-time MESCAL v2 Taproot tracking, Model D reward splits, 50% unclaimed-seat burns, and 7+1+3 validator analytics.',
+        feature1: 'REST & SSE API v2.1 (OpenAPI) + Live Stream',
+        feature2: 'Model D, Burn & 7+1+3 Validator Analytics',
+        feature3: 'Bech32m Taproot (kt1p...), Wallet/Exchange & Contract API',
+        link1: 'Launch Explorer',
+        link2: 'API Docs (v2.1)'
       },
       velvet: {
         category: 'Creative Web3 Game',
@@ -482,7 +484,7 @@ export const translations: Record<string, any> = {
       tech: {
         mescal: {
           tagline: 'MESCAL v2 Taproot (kt1p...) & Deterministic CScript',
-          desc: 'Deterministic, loop-free declarative smart contract architecture (CMescal) compiling JSON/YAML templates directly to BIP-341 Taproot (kt1p... Bech32m) and stack-based CScript bytecode while preventing re-entrancy vulnerabilities. Via the in-wallet visual designer and BIP174 PSBT, natively supports 250 KRISTA Coin-Lock, 10 KRISTA Funded PoW-Lock (2,880-block CLTV + 20-block buffer), Block 2,500+ permanent 0 KRISTA Open PoW, M-of-N vaults, time-locks, vesting (CSV), and HTLC swaps.',
+          desc: 'Deterministic, loop-free declarative smart contract architecture (CMescal) compiling JSON/YAML templates directly to BIP-341 Taproot (kt1p... Bech32m) and stack-based CScript bytecode while preventing re-entrancy vulnerabilities. Via the in-wallet visual designer, MESCAL Web Studio (20+ enterprise/personal templates), @kristatech/sdk, and BIP174 PSBT, natively supports 250 KRISTA Coin-Lock, 10 KRISTA Funded PoW-Lock (2,880-block CLTV + 20-block buffer), Block 2,500+ permanent 0 KRISTA Open PoW, M-of-N vaults, time-locks, vesting (CSV), and HTLC swaps.',
           spec1Name: 'Lock & Registration Protocol',
           spec1Val: '250 Coin-Lock / 10 Funded PoW (2,880 CLTV) / 0 Open PoW',
           spec2Name: 'Supported Templates',

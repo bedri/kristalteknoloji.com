@@ -36,7 +36,8 @@ const projects = computed(() => [
       t('ecosystem.explorer.feature3')
     ],
     links: [
-      { label: t('ecosystem.explorer.link1'), href: 'https://explorer.kristalteknoloji.com', target: true }
+      { label: t('ecosystem.explorer.link1'), href: 'https://explorer.kristalteknoloji.com', target: true },
+      { label: t('ecosystem.explorer.link2'), href: 'https://explorer.kristalteknoloji.com/api-docs', target: true }
     ]
   },
   {
