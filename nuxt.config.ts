@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/ui'
   ],
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NUXT_DEVTOOLS === 'true' },
   routeRules: {
     '/**': {
       headers: SECURITY_HEADERS

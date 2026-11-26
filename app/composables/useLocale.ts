@@ -5,6 +5,7 @@ export function useLocale() {
     default: () => 'tr',
     path: '/',
     sameSite: 'lax',
+    secure: import.meta.env.PROD,
     maxAge: 60 * 60 * 24 * 365 // 1 year
   })
 

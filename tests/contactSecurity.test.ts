@@ -2,12 +2,17 @@ import { describe, it, beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   isAllowedFetchSite,
+  isAllowedOrigin,
+  isAllowedContentType,
+  isWithinBodySizeLimit,
   sanitizeControlChars,
   maskEmail,
   maskName,
   validateContactPayload,
   checkRateLimit,
-  resetRateLimitStore
+  getRateLimitStoreSize,
+  resetRateLimitStore,
+  MAX_CONTACT_BODY_BYTES
 } from '../server/utils/contactSecurity.ts'
 
 describe('server/utils/contactSecurity', () => {
@@ -168,6 +173,67 @@ describe('server/utils/contactSecurity', () => {
       const afterExpiry = checkRateLimit(ip, t0 + windowMs + 1000, 3, windowMs)
       assert.equal(afterExpiry.allowed, true)
       assert.equal(afterExpiry.remaining, 2)
+    })
+
+    it('bounds rate limit buckets via FIFO eviction when maxBuckets is reached', () => {
+      const t0 = 1_700_000_000_000
+      for (let i = 1; i <= 10; i++) {
+        const res = checkRateLimit(`198.51.100.${i}`, t0 + i, 5, 60_000, 5)
+        assert.equal(res.allowed, true)
+        assert.ok(getRateLimitStoreSize() <= 5)
+      }
+      assert.equal(getRateLimitStoreSize(), 5)
+    })
+  })
+
+  describe('isAllowedOrigin', () => {
+    it('allows absent origin and matching http/https hosts case-insensitively', () => {
+      assert.equal(isAllowedOrigin(undefined, 'kristal.example'), true)
+      assert.equal(isAllowedOrigin(null, 'kristal.example'), true)
+      assert.equal(isAllowedOrigin('', 'kristal.example'), true)
+      assert.equal(isAllowedOrigin('https://kristal.example', 'kristal.example'), true)
+      assert.equal(isAllowedOrigin('HTTPS://KRISTAL.EXAMPLE', 'Kristal.Example'), true)
+      assert.equal(isAllowedOrigin('http://127.0.0.1:8090', '127.0.0.1:8090'), true)
+    })
+
+    it('blocks mismatched hosts, invalid URLs, non-HTTP schemes, and missing host header', () => {
+      assert.equal(isAllowedOrigin('https://evil.example', 'kristal.example'), false)
+      assert.equal(isAllowedOrigin('javascript:alert(1)', 'kristal.example'), false)
+      assert.equal(isAllowedOrigin('file:///etc/passwd', 'kristal.example'), false)
+      assert.equal(isAllowedOrigin('not-a-valid-url', 'kristal.example'), false)
+      assert.equal(isAllowedOrigin('https://kristal.example', ''), false)
+      assert.equal(isAllowedOrigin('https://kristal.example', undefined), false)
+    })
+  })
+
+  describe('isAllowedContentType', () => {
+    it('allows application/json and +json media types', () => {
+      assert.equal(isAllowedContentType('application/json'), true)
+      assert.equal(isAllowedContentType('application/json; charset=utf-8'), true)
+      assert.equal(isAllowedContentType('APPLICATION/PROBLEM+JSON'), true)
+    })
+
+    it('rejects missing or non-JSON content types', () => {
+      assert.equal(isAllowedContentType(undefined), false)
+      assert.equal(isAllowedContentType(''), false)
+      assert.equal(isAllowedContentType('text/plain'), false)
+      assert.equal(isAllowedContentType('application/x-www-form-urlencoded'), false)
+      assert.equal(isAllowedContentType('multipart/form-data; boundary=abc'), false)
+    })
+  })
+
+  describe('isWithinBodySizeLimit', () => {
+    it('allows missing content-length, zero, and values up to MAX_CONTACT_BODY_BYTES', () => {
+      assert.equal(isWithinBodySizeLimit(undefined), true)
+      assert.equal(isWithinBodySizeLimit('0'), true)
+      assert.equal(isWithinBodySizeLimit(String(MAX_CONTACT_BODY_BYTES)), true)
+    })
+
+    it('rejects oversized, negative, and non-numeric content-length values', () => {
+      assert.equal(isWithinBodySizeLimit(String(MAX_CONTACT_BODY_BYTES + 1)), false)
+      assert.equal(isWithinBodySizeLimit('-1'), false)
+      assert.equal(isWithinBodySizeLimit('abc'), false)
+      assert.equal(isWithinBodySizeLimit('123abc'), false)
     })
   })
 })

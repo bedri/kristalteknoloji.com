@@ -1,17 +1,23 @@
 import { defineEventHandler, readBody, createError, getRequestHeader, getRequestIP, setResponseHeader } from 'h3'
 import {
   isAllowedFetchSite,
+  isAllowedOrigin,
+  isAllowedContentType,
+  isWithinBodySizeLimit,
   checkRateLimit,
   validateContactPayload,
   maskEmail,
-  maskName
+  maskName,
+  MAX_CONTACT_BODY_BYTES
 } from '../utils/contactSecurity'
 
 export default defineEventHandler(async (event) => {
-  // Prevent CDN/proxy cache poisoning across Fetch Metadata contexts
-  setResponseHeader(event, 'Vary', 'Sec-Fetch-Dest, Sec-Fetch-Mode, Sec-Fetch-Site')
+  // Prevent CDN/proxy cache poisoning across Fetch Metadata and Origin contexts
+  setResponseHeader(event, 'Vary', 'Sec-Fetch-Dest, Sec-Fetch-Mode, Sec-Fetch-Site, Origin')
 
-  // 1. Fetch Metadata cross-site request protection
+  const trustProxy = process.env.TRUST_PROXY === 'true'
+
+  // 1. Fetch Metadata & Origin cross-site request protection
   const secFetchSite = getRequestHeader(event, 'sec-fetch-site')
   if (!isAllowedFetchSite(secFetchSite)) {
     throw createError({
@@ -20,8 +26,33 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // 2. Per-IP Rate Limiting
-  const clientIp = getRequestIP(event, { xForwardedFor: true }) || 'unknown'
+  const origin = getRequestHeader(event, 'origin')
+  const rawForwardedHost = trustProxy ? getRequestHeader(event, 'x-forwarded-host') : undefined
+  const host = rawForwardedHost?.split(',', 1)[0]?.trim() || getRequestHeader(event, 'host')
+  if (!isAllowedOrigin(origin, host)) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden: Invalid request origin.'
+    })
+  }
+
+  // 2. Enforce strict JSON Content-Type and pre-read payload size limit
+  if (!isAllowedContentType(getRequestHeader(event, 'content-type'))) {
+    throw createError({
+      statusCode: 415,
+      statusMessage: 'Unsupported Media Type: application/json required.'
+    })
+  }
+
+  if (!isWithinBodySizeLimit(getRequestHeader(event, 'content-length'))) {
+    throw createError({
+      statusCode: 413,
+      statusMessage: 'Payload Too Large.'
+    })
+  }
+
+  // 3. Per-IP Rate Limiting
+  const clientIp = getRequestIP(event, { xForwardedFor: trustProxy }) || 'unknown'
   const rateLimit = checkRateLimit(clientIp)
   if (!rateLimit.allowed) {
     setResponseHeader(event, 'Retry-After', String(rateLimit.retryAfterSeconds))
@@ -31,8 +62,16 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // 3. Parse & strictly validate body
+  // 4. Parse & strictly validate body (with post-read size enforcement)
   const body = await readBody(event)
+  const serializedSize = Buffer.byteLength(JSON.stringify(body ?? ''), 'utf8')
+  if (serializedSize > MAX_CONTACT_BODY_BYTES) {
+    throw createError({
+      statusCode: 413,
+      statusMessage: 'Payload Too Large.'
+    })
+  }
+
   const validation = validateContactPayload(body)
 
   if (!validation.valid) {

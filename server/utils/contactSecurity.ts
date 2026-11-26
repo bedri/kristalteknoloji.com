@@ -12,6 +12,8 @@ export interface ContactValidationResult {
   data?: ContactFormData
 }
 
+export const MAX_CONTACT_BODY_BYTES = 16 * 1024
+
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
 
 const ALLOWED_FETCH_SITES = new Set(['same-origin', 'same-site', 'none'])
@@ -22,6 +24,46 @@ const ALLOWED_FETCH_SITES = new Set(['same-origin', 'same-site', 'none'])
 export function isAllowedFetchSite(secFetchSite?: string | null): boolean {
   if (!secFetchSite) return true
   return ALLOWED_FETCH_SITES.has(secFetchSite.toLowerCase().trim())
+}
+
+/**
+ * Enforces JSON Content-Type headers for API mutation payloads.
+ */
+export function isAllowedContentType(contentType?: string | null): boolean {
+  if (!contentType) return false
+  const mediaType = (contentType.split(';', 1)[0] ?? '').trim().toLowerCase()
+  return mediaType === 'application/json' || mediaType.endsWith('+json')
+}
+
+/**
+ * Validates an HTTP(S) Origin header against the expected request Host header.
+ */
+export function isAllowedOrigin(origin?: string | null, host?: string | null): boolean {
+  if (!origin) return true
+  if (!host) return false
+  try {
+    const parsed = new URL(origin)
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+      return false
+    }
+    return parsed.host.toLowerCase() === host.trim().toLowerCase()
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Validates Content-Length headers against the configured byte limit.
+ */
+export function isWithinBodySizeLimit(
+  contentLength?: string | null,
+  maxBytes = MAX_CONTACT_BODY_BYTES
+): boolean {
+  if (!contentLength) return true
+  const trimmed = contentLength.trim()
+  if (!/^\d+$/.test(trimmed)) return false
+  const bytes = Number.parseInt(trimmed, 10)
+  return Number.isFinite(bytes) && bytes >= 0 && bytes <= maxBytes
 }
 
 /**
@@ -135,20 +177,22 @@ const rateLimitStore = new Map<string, RateLimitBucket>()
 
 export const RATE_LIMIT_MAX_REQUESTS = 5
 export const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000 // 10 minutes
+export const RATE_LIMIT_MAX_BUCKETS = 5000
 
 /**
- * Simple in-memory per-IP rate limiter with automatic expiry cleanup.
+ * Simple in-memory per-IP rate limiter with automatic expiry cleanup and bounded FIFO eviction.
  */
 export function checkRateLimit(
   ip: string,
   now = Date.now(),
   maxRequests = RATE_LIMIT_MAX_REQUESTS,
-  windowMs = RATE_LIMIT_WINDOW_MS
+  windowMs = RATE_LIMIT_WINDOW_MS,
+  maxBuckets = RATE_LIMIT_MAX_BUCKETS
 ): { allowed: boolean; remaining: number; retryAfterSeconds: number } {
-  const key = ip || 'unknown'
+  const key = (ip || 'unknown').trim().slice(0, 64) || 'unknown'
 
-  // Opportunistic cleanup to prevent unbounded map growth
-  if (rateLimitStore.size > 500) {
+  // Opportunistic cleanup of expired buckets before considering eviction
+  if (rateLimitStore.size > 500 || rateLimitStore.size >= maxBuckets) {
     for (const [k, bucket] of rateLimitStore.entries()) {
       if (bucket.resetAt <= now) {
         rateLimitStore.delete(k)
@@ -158,6 +202,16 @@ export function checkRateLimit(
 
   const existing = rateLimitStore.get(key)
   if (!existing || existing.resetAt <= now) {
+    if (existing) {
+      rateLimitStore.delete(key)
+    }
+
+    while (rateLimitStore.size >= maxBuckets) {
+      const oldestKey = rateLimitStore.keys().next().value
+      if (oldestKey === undefined) break
+      rateLimitStore.delete(oldestKey)
+    }
+
     rateLimitStore.set(key, {
       count: 1,
       resetAt: now + windowMs
@@ -183,6 +237,10 @@ export function checkRateLimit(
     remaining: Math.max(0, maxRequests - existing.count),
     retryAfterSeconds: 0
   }
+}
+
+export function getRateLimitStoreSize(): number {
+  return rateLimitStore.size
 }
 
 export function resetRateLimitStore(): void {

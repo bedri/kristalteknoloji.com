@@ -33,7 +33,14 @@ describe('Security Headers & Codebase Security Audit', () => {
     assert.equal(headers['Cross-Origin-Opener-Policy'], 'same-origin-allow-popups')
     assert.equal(headers['Cross-Origin-Resource-Policy'], 'same-origin')
     assert.ok(headers['Strict-Transport-Security']?.includes('max-age=31536000'))
-    assert.ok(headers['Content-Security-Policy']?.includes("frame-ancestors 'self'"))
+    const csp = headers['Content-Security-Policy'] || ''
+    assert.ok(csp.includes("default-src 'self'"))
+    assert.ok(csp.includes("object-src 'none'"))
+    assert.ok(csp.includes("base-uri 'self'"))
+    assert.ok(csp.includes("form-action 'self'"))
+    assert.ok(csp.includes("frame-ancestors 'self'"))
+    assert.ok(csp.includes("connect-src 'self' https://api.iconify.design"))
+    assert.equal(csp.includes('upgrade-insecure-requests'), false)
     assert.ok(Object.isFrozen(SECURITY_HEADERS))
   })
 
@@ -112,5 +119,32 @@ describe('Security Headers & Codebase Security Audit', () => {
     assert.ok(headerContent.includes('var(--header-scroll-bg)'), 'AppHeader @keyframes must use var(--header-scroll-bg)')
     assert.equal(headerContent.includes('shrink-header-dark'), false, 'AppHeader must not default to dark keyframe in light mode')
     assert.ok(mainCssContent.includes('--header-scroll-bg:'), 'main.css must define adaptive --header-scroll-bg token')
+  })
+
+  it('enforces hardened runtime security configuration across config, locale cookie, and contact API', () => {
+    const nuxtConfig = fs.readFileSync(path.join(ROOT_DIR, 'nuxt.config.ts'), 'utf-8')
+    const localeComposable = fs.readFileSync(path.join(APP_DIR, 'composables/useLocale.ts'), 'utf-8')
+    const contactEndpoint = fs.readFileSync(path.join(ROOT_DIR, 'server/api/contact.post.ts'), 'utf-8')
+
+    assert.ok(
+      nuxtConfig.includes("process.env.NUXT_DEVTOOLS === 'true'"),
+      'nuxt.config.ts must gate DevTools behind NUXT_DEVTOOLS === true'
+    )
+    assert.equal(
+      nuxtConfig.includes('devtools: { enabled: true }'),
+      false,
+      'nuxt.config.ts must not unconditionally enable DevTools'
+    )
+
+    assert.ok(localeComposable.includes("sameSite: 'lax'"), 'Locale cookie must enforce SameSite=Lax')
+    assert.ok(
+      localeComposable.includes('secure: import.meta.env.PROD'),
+      'Locale cookie must enforce Secure attribute in production'
+    )
+
+    assert.ok(contactEndpoint.includes('TRUST_PROXY'), 'Contact endpoint must gate forwarded headers behind TRUST_PROXY')
+    assert.ok(contactEndpoint.includes('isAllowedOrigin'), 'Contact endpoint must validate Origin against Host')
+    assert.ok(contactEndpoint.includes('isAllowedContentType'), 'Contact endpoint must enforce JSON Content-Type')
+    assert.ok(contactEndpoint.includes('isWithinBodySizeLimit'), 'Contact endpoint must enforce request body size limits')
   })
 })

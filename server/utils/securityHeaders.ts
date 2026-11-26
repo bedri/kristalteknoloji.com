@@ -6,7 +6,7 @@ export const SECURITY_HEADERS: Readonly<Record<string, string>> = Object.freeze(
   'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
   'Cross-Origin-Resource-Policy': 'same-origin',
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-  'Content-Security-Policy': "frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.iconify.design; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
 })
 
 export function getSecurityHeaders(): Record<string, string> {
